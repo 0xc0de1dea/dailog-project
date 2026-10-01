@@ -1,6 +1,12 @@
 package com.example.chapter03daily.domain.chat.controller;
 
-import com.example.chapter03daily.domain.chat.dto.ChatMessage;
+import com.example.chapter03daily.common.exception.ErrorCode;
+import com.example.chapter03daily.common.exception.ServiceException;
+import com.example.chapter03daily.domain.chat.dto.ChatMessageDto;
+import com.example.chapter03daily.domain.chat.entity.ChatMessage;
+import com.example.chapter03daily.domain.chat.repository.ChatMessageRepository;
+import com.example.chapter03daily.domain.user.entity.User;
+import com.example.chapter03daily.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -11,20 +17,23 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class ChatController {
 
+    private final UserRepository userRepository;
+    private final ChatMessageRepository chatMessageRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat.send")
     public void send(
-            ChatMessage message,
-
-            SimpMessageHeaderAccessor headerAccessor
+            ChatMessageDto chatMessageDto
     ) {
-        String sessionId = headerAccessor.getSessionId();
+        User sender = userRepository
+                .findById(chatMessageDto.getSenderId())
+                        .orElseThrow(
+                                () -> new ServiceException(ErrorCode.USER_NOT_FOUND)
+                        );
 
-        System.out.println("서버 수신 메시지");
-        System.out.println("sessionId = " + sessionId);
-        System.out.println("content   = " + message.getContent());
+        ChatMessage message = new ChatMessage(sender, chatMessageDto.getContent());
+        chatMessageRepository.save(message);
 
-        messagingTemplate.convertAndSend("/sub/chat", message);
+        messagingTemplate.convertAndSend("/sub/chat", chatMessageDto);
     }
 }
