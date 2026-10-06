@@ -17,20 +17,22 @@ public class ChatQueryController {
 
     private final ChatQueryService chatQueryService;
 
-    @GetMapping("/messages")
+    @GetMapping("/rooms/{roomId}/messages")
     public ResponseEntity<ApiResponse<List<ChatMessageResponse>>> getMessages(
+            @PathVariable Long roomId,
             @RequestParam(defaultValue = "50") int size
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.ok(chatQueryService.getRecentMessages(size)));
+                .body(ApiResponse.ok(chatQueryService.getRecentMessages(roomId, size)));
     }
 
-    @GetMapping("/messages/before/{id}")
+    @GetMapping("/rooms/{roomId}/messages/before/{lastMessageId}")
     public ResponseEntity<ApiResponse<List<ChatMessageResponse>>> getMessagesBefore(
-            @PathVariable Long id,
+            @PathVariable Long roomId,
+            @PathVariable Long lastMessageId,
             @RequestParam(defaultValue = "50") int size
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.ok(chatQueryService.getMessageBefore(id, size)));
+                .body(ApiResponse.ok(chatQueryService.getMessageBefore(roomId, lastMessageId, size)));
     }
 }

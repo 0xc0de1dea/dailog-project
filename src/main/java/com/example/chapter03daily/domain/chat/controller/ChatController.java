@@ -5,6 +5,8 @@ import com.example.chapter03daily.common.exception.ServiceException;
 import com.example.chapter03daily.domain.chat.dto.ChatMessageDto;
 import com.example.chapter03daily.domain.chat.entity.ChatMessage;
 import com.example.chapter03daily.domain.chat.repository.ChatMessageRepository;
+import com.example.chapter03daily.domain.chatroom.entity.ChatRoom;
+import com.example.chapter03daily.domain.chatroom.repository.ChatRoomRepository;
 import com.example.chapter03daily.domain.user.entity.User;
 import com.example.chapter03daily.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class ChatController {
 
     private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat.send")
@@ -31,9 +34,15 @@ public class ChatController {
                                 () -> new ServiceException(ErrorCode.USER_NOT_FOUND)
                         );
 
-        ChatMessage message = new ChatMessage(sender, chatMessageDto.getContent());
+        ChatRoom chatRoom = chatRoomRepository
+                .findById(chatMessageDto.getRoomId())
+                        .orElseThrow(
+                                () -> new ServiceException(ErrorCode.CHATROOM_NOT_FOUND)
+                        );
+
+        ChatMessage message = new ChatMessage(chatRoom, sender, chatMessageDto.getContent());
         chatMessageRepository.save(message);
 
-        messagingTemplate.convertAndSend("/sub/chat", chatMessageDto);
+        messagingTemplate.convertAndSend("/sub/chat/" + chatMessageDto.getRoomId(), chatMessageDto);
     }
 }

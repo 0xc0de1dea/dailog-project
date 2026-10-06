@@ -14,9 +14,11 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
         select m
         from ChatMessage m
         join fetch m.sender
+        where m.chatRoom.id = :roomId
         order by m.id desc
     """)
     List<ChatMessage> findRecentMessages(
+            @Param("roomId") Long roomId,
             Pageable pageable
     );
 
@@ -24,10 +26,11 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
         select m
         from ChatMessage m
         join fetch m.sender
-        where m.id < :lastMessageId
+        where m.id < :lastMessageId and m.chatRoom.id = :roomId
         order by m.id desc
     """)
     List<ChatMessage> findMessagesBefore(
+            @Param("roomId") Long roomId,
             @Param("lastMessageId") Long lastMessageId,
             Pageable pageable
     );

@@ -26,6 +26,11 @@ public enum ErrorCode {
     EXCEEDED_COMMENT(HttpStatus.BAD_REQUEST, "하나의 일정에는 댓글을 10개까지만 작성할 수 있습니다."),
 
     /**
+     * ChatRoom
+     */
+    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 채팅방을 찾을 수 없습니다."),
+
+    /**
      * Like
      */
     ALREADY_LIKED(HttpStatus.CONFLICT, "이미 좋아요를 누르셨습니다."),

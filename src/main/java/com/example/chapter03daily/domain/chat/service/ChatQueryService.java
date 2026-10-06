@@ -15,19 +15,19 @@ public class ChatQueryService {
 
     private final ChatMessageRepository repository;
 
-    public List<ChatMessageResponse> getRecentMessages(int size) {
+    public List<ChatMessageResponse> getRecentMessages(Long roomId, int size) {
         Pageable pageable = PageRequest.of(0, size);
 
-        return repository.findRecentMessages(pageable)
+        return repository.findRecentMessages(roomId, pageable)
                 .stream()
                 .map(ChatMessageResponse::new)
                 .toList();
     }
 
-    public List<ChatMessageResponse> getMessageBefore(Long lastMessageId, int size) {
+    public List<ChatMessageResponse> getMessageBefore(Long roomId, Long lastMessageId, int size) {
         Pageable pageable = PageRequest.of(0, size);
 
-        return repository.findMessagesBefore(lastMessageId, pageable)
+        return repository.findMessagesBefore(roomId, lastMessageId, pageable)
                 .stream()
                 .map(ChatMessageResponse::new)
                 .toList();
