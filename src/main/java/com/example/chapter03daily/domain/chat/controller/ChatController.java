@@ -2,6 +2,7 @@ package com.example.chapter03daily.domain.chat.controller;
 
 import com.example.chapter03daily.common.exception.ErrorCode;
 import com.example.chapter03daily.common.exception.ServiceException;
+import com.example.chapter03daily.common.interceptor.AuthenticatedUser;
 import com.example.chapter03daily.domain.chat.dto.ChatMessageDto;
 import com.example.chapter03daily.domain.chat.entity.ChatMessage;
 import com.example.chapter03daily.domain.chat.repository.ChatMessageRepository;
@@ -15,6 +16,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
@@ -26,13 +29,16 @@ public class ChatController {
 
     @MessageMapping("/chat.send")
     public void send(
-            ChatMessageDto chatMessageDto
+            ChatMessageDto chatMessageDto,
+            Principal principal
     ) {
-        User sender = userRepository
-                .findById(chatMessageDto.getSenderId())
-                        .orElseThrow(
-                                () -> new ServiceException(ErrorCode.USER_NOT_FOUND)
-                        );
+//        User sender = userRepository
+//                .findById(chatMessageDto.getSenderId())
+//                        .orElseThrow(
+//                                () -> new ServiceException(ErrorCode.USER_NOT_FOUND)
+//                        );
+
+        User sender = AuthenticatedUser.fromPrincipal(principal);
 
         ChatRoom chatRoom = chatRoomRepository
                 .findById(chatMessageDto.getRoomId())
