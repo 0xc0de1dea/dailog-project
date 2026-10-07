@@ -5,6 +5,8 @@
 
 <br>
 
+![img.png](img.png)
+
 <div align="center">
 
 ### 📝 Daily 기록 · 💬 실시간 채팅 · ❤️ 좋아요 · ⚡ Redis · 🔐 JWT
