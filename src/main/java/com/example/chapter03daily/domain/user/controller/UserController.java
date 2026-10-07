@@ -27,7 +27,7 @@ public class UserController {
                 .body(ApiResponse.created(userService.register(request)));
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> login(
             @Valid @RequestBody LoginRequest request
     ) {
