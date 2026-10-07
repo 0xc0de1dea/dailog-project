@@ -43,6 +43,7 @@ public class DailyCustomRepositoryImpl implements DailyCustomRepository {
                 .select(
                         Projections.constructor(
                                 DailyDto.Response.class,
+                                daily.id,
                                 daily.title,
                                 daily.content,
                                 daily.author,

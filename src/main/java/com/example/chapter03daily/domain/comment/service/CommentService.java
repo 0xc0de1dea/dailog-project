@@ -54,6 +54,7 @@ public class CommentService {
         );
 
         return CommentDto.Response.build(
+                comment.getId(),
                 daily.getId(),
                 comment.getContent(),
                 comment.getAuthor(),
@@ -75,6 +76,7 @@ public class CommentService {
         return comments
                 .stream()
                 .map(comment -> CommentDto.Response.build(
+                        comment.getId(),
                         comment.getDaily().getId(),
                         comment.getContent(),
                         comment.getAuthor(),
@@ -110,6 +112,7 @@ public class CommentService {
         savedComment.update(request.getContent());
 
         return CommentDto.Response.build(
+                savedComment.getId(),
                 savedComment.getDaily().getId(),
                 savedComment.getContent(),
                 savedComment.getAuthor(),

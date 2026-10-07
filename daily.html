@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Daily Board</title>
+<style>
+:root{--bg:#f6f7fb;--panel:#fff;--text:#182033;--muted:#7b8498;--line:#e6e9f0;--primary:#5865f2;--danger:#e05252;--like:#e0a100}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Noto Sans KR",sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer}.layout{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{background:#151a2b;color:#fff;padding:24px;position:sticky;top:0;height:100vh}.brand{font-size:22px;font-weight:800}.caption{color:#9aa3ba;font-size:12px;margin:5px 0 24px}
+.box{border:1px solid #2c344b;background:#1d2438;border-radius:12px;padding:14px;margin:12px 0}.box label{display:block;font-size:12px;color:#aab2c7;margin-bottom:7px}
+select,input,textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 12px;outline:none;background:#fff;color:var(--text)}
+aside select{background:#101629;color:#fff;border-color:#343d56}.box button{width:100%;margin-top:8px}
+main{width:min(1100px,100%);margin:auto;padding:34px 28px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+h1{margin:0 0 5px;font-size:28px}h2,h3,p{margin-top:0}.muted{color:var(--muted);font-size:13px}
+.btn{border:1px solid var(--line);background:#fff;padding:9px 13px;border-radius:9px}.primary{background:var(--primary);color:#fff;border-color:var(--primary)}.danger{color:var(--danger);background:#fff;border-color:#f1c7c7}.like{color:var(--like);background:#fff8e1;border-color:#f3df9e}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px}.post{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;transition:.15s}.post:hover{transform:translateY(-2px);box-shadow:0 8px 25px #18203312}
+.post h3{margin:0 0 9px}.content{white-space:pre-wrap;line-height:1.6;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:13px 0}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions .btn{padding:7px 10px;font-size:12px}
+.detail{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:24px}.detail-head{display:flex;justify-content:space-between;gap:15px}.detail-content{white-space:pre-wrap;line-height:1.8;margin:22px 0}
+.comments{border-top:1px solid var(--line);margin-top:24px;padding-top:22px}.comment{padding:14px 0;border-bottom:1px solid var(--line)}.comment:last-child{border:0}.comment-head{display:flex;justify-content:space-between}.comment-body{white-space:pre-wrap;line-height:1.6;margin:8px 0}.comment-actions{display:flex;gap:6px}.comment-actions button{font-size:12px;padding:5px 8px}
+.form{display:grid;gap:10px}.form label{font-size:12px;font-weight:700}.empty{text-align:center;padding:50px;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+.paging{display:flex;justify-content:center;align-items:center;gap:10px;margin:22px}.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;padding:20px;z-index:5}.modal.open{display:flex}.modal-card{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:15px;padding:22px}.modal-head{display:flex;justify-content:space-between}.close{border:0;background:none;font-size:25px;color:var(--muted)}
+.toast{position:fixed;right:20px;bottom:20px;background:#151a2b;color:#fff;padding:12px 16px;border-radius:10px;display:none}.toast.show{display:block}
+@media(max-width:760px){.layout{display:block}aside{position:static;height:auto}.top{align-items:flex-start;flex-direction:column}main{padding:20px 14px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand">📓 Daily</div><div class="caption">Spring Boot Daily API client</div>
+  <div class="box"><label>로그인 사용자</label><select id="user"><option value="김동현">김동현</option><option value="동현킴">동현킴</option></select><button class="btn primary" onclick="login()">JWT 로그인</button><div id="status" style="font-size:12px;color:#9aa3ba;margin-top:9px">로그인 필요</div></div>
+  <div class="box"><label>목록 설정</label><select id="size"><option>6</option><option selected>10</option><option>20</option></select><button class="btn" onclick="load(0)">새로고침</button></div>
+  <div class="box"><button class="btn primary" onclick="openCreate()">+ Daily 작성</button></div>
+</aside>
+<main>
+  <div class="top"><div><h1>Daily</h1><div class="muted">게시글과 댓글을 한 화면에서 관리합니다.</div></div><button class="btn" onclick="load(page)">↻</button></div>
+  <section id="list"></section><div class="paging"><button id="prev" class="btn" onclick="load(page-1)">← 이전</button><span id="pageInfo" class="muted"></span><button id="next" class="btn" onclick="load(page+1)">다음 →</button></div>
+  <section id="detail"></section>
+</main></div>
+<div id="modal" class="modal"><div class="modal-card"><div class="modal-head"><h2 id="modalTitle"></h2><button class="close" onclick="closeModal()">×</button></div><div id="modalBody"></div></div></div>
+<div id="toast" class="toast"></div>
+<script>
+const API='http://localhost:8080';let token=localStorage.getItem('dailyJwt')||'',page=0,current=null;
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));const val=id=>document.getElementById(id)?.value.trim()||'';const date=x=>x?new Date(x).toLocaleString('ko-KR'):'-';
+function auth(){return token?{Authorization:token}:{}} async function api(path,opt={}){let r=await fetch(API+path,{...opt,headers:{'Content-Type':'application/json',...(opt.auth===false?{}:auth()),...(opt.headers||{})}});let t=await r.text(),b;try{b=t?JSON.parse(t):null}catch{b=t}if(!r.ok)throw Error(typeof b==='string'?b:(b?.data||`HTTP ${r.status}`));return b}
+function toast(s){let e=document.getElementById('toast');e.textContent=s;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2200)}
+async function login(){let username=document.getElementById('user').value;try{let r=await api('/api/users/login',{method:'POST',auth:false,body:JSON.stringify({username,password:'12345678'})});token=r.data;localStorage.setItem('dailyJwt',token);document.getElementById('status').textContent=username+' 로그인됨';toast('로그인 성공')}catch(e){toast('로그인 실패: '+e.message)}}
+function needLogin(){if(!token){toast('먼저 로그인해주세요.');return false}return true}
+async function load(p=0){if(p<0)return;page=p;try{let r=await api(`/api/dailies?page=${p}&size=${document.getElementById('size').value}`,{auth:false}),d=r.data;renderList(d.content||[]);let i=d.pageInfo||{};document.getElementById('pageInfo').textContent=`${(i.page??0)+1} / ${i.totalPages??1} · 총 ${i.totalElements??0}개`;prev.disabled=!!i.isFirst;next.disabled=!!i.isLast}catch(e){document.getElementById('list').innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+function renderList(items){if(!items.length){list.innerHTML='<div class="empty">등록된 Daily가 없습니다.</div>';return}list.innerHTML='<div class="grid">'+items.map(d=>`<article class="post"><h3>${esc(d.title)}</h3><div class="content">${esc(d.content)}</div><div class="meta"><span>👤 ${esc(d.author)}</span><span>❤️ ${d.likes??0}</span><span>🕒 ${date(d.modifiedAt||d.createdAt)}</span></div><div class="actions"><button class="btn primary" onclick="detail(${d.id})">상세</button><button class="btn like" onclick="likeDaily(${d.id})">❤️</button><button class="btn" onclick="editDaily(${d.id})">수정</button><button class="btn danger" onclick="deleteDaily(${d.id})">삭제</button></div></article>`).join('')+'</div>'}
+async function detail(id){try{let r=await api(`/api/dailies/${id}`,{auth:false});current=r.data;renderDetail()}catch(e){toast(e.message)}}
+function renderDetail(){let d=current;document.getElementById('detail').innerHTML=`<div class="detail"><div class="detail-head"><div><div class="muted">Daily #${d.id}</div><h2>${esc(d.title)}</h2><div class="meta">👤 ${esc(d.author)} · ❤️ ${d.likes??0} · ${date(d.modifiedAt||d.createdAt)}</div></div><button class="btn" onclick="document.getElementById('detail').innerHTML=''">닫기</button></div><div class="detail-content">${esc(d.content)}</div><div class="actions"><button class="btn like" onclick="likeDaily(${d.id});detail(${d.id})">❤️ 좋아요</button><button class="btn" onclick="editDaily(${d.id})">수정</button><button class="btn danger" onclick="deleteDaily(${d.id})">삭제</button></div><div class="comments"><h3>댓글 ${d.comments?.length??0} / 10</h3><div class="box" style="background:#fafbfe;border:1px solid var(--line)"><div class="form"><label>댓글</label><textarea id="newComment" maxlength="100" placeholder="댓글을 입력하세요"></textarea><label>비밀번호</label><input id="commentPw" type="password"><button class="btn primary" onclick="createComment(${d.id})">댓글 등록</button></div></div><div id="commentList">${renderComments(d.comments||[])}</div></div></div>`}
+function renderComments(cs){if(!cs.length)return'<div class="empty">댓글이 없습니다.</div>';return cs.map(c=>{let id=c.commentId;return `<div class="comment"><div class="comment-head"><b>${esc(c.author)}</b><span class="muted">${date(c.modifiedAt||c.createdAt)}</span></div><div class="comment-body">${esc(c.content)}</div><div class="comment-actions"><span class="muted">❤️ ${c.likes??0}</span><button class="btn like" onclick="likeComment(${id})">좋아요</button><button class="btn" onclick="editComment(${id})">수정</button><button class="btn danger" onclick="deleteComment(${id})">삭제</button></div></div>`}).join('')}
+function openModal(title,html){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=html;document.getElementById('modal').classList.add('open')}function closeModal(){document.getElementById('modal').classList.remove('open')}
+function openCreate(){if(!needLogin())return;openModal('Daily 작성',`<div class="form"><label>제목</label><input id="t" maxlength="30"><label>내용</label><textarea id="c" maxlength="200"></textarea><label>비밀번호</label><input id="pw" type="password"><button class="btn primary" onclick="createDaily()">작성</button></div>`)}
+async function createDaily(){try{await api('/api/dailies',{method:'POST',body:JSON.stringify({title:val('t'),content:val('c'),password:val('pw')})});closeModal();await load(page);toast('Daily가 작성되었습니다.')}catch(e){toast(e.message)}}
+async function editDaily(id){if(!needLogin())return;let r=await api(`/api/dailies/${id}`,{auth:false}),d=r.data;openModal('Daily 수정',`<div class="form"><label>제목</label><input id="t" maxlength="30" value="${esc(d.title)}"><label>내용</label><textarea id="c" maxlength="200">${esc(d.content)}</textarea><label>비밀번호</label><input id="pw" type="password"><button class="btn primary" onclick="updateDaily(${id})">수정</button></div>`)}
+async function updateDaily(id){try{await api(`/api/dailies/${id}`,{method:'PATCH',body:JSON.stringify({title:val('t'),content:val('c'),password:val('pw')})});closeModal();await load(page);await detail(id);toast('수정되었습니다.')}catch(e){toast(e.message)}}
+async function deleteDaily(id){if(!needLogin()||!confirm('Daily를 삭제할까요?'))return;let pw=prompt('작성 당시 비밀번호');if(pw===null)return;try{await api(`/api/dailies/${id}`,{method:'DELETE',body:JSON.stringify({password:pw})});document.getElementById('detail').innerHTML='';await load(page);toast('삭제되었습니다.')}catch(e){toast(e.message)}}
+async function likeDaily(id){if(!needLogin())return;try{await api(`/api/dailies/${id}/likes`,{method:'POST'});await load(page)}catch(e){toast(e.message)}}
+async function createComment(did){if(!needLogin())return;try{await api(`/api/comments/${did}`,{method:'POST',body:JSON.stringify({content:val('newComment'),password:val('commentPw')})});await detail(did);toast('댓글이 등록되었습니다.')}catch(e){toast(e.message)}}
+async function editComment(id){if(!needLogin())return;let c=current.comments.find(x=>x.commentId===id);if(!c)return;openModal('댓글 수정',`<div class="form"><label>내용</label><textarea id="ec" maxlength="100">${esc(c.content)}</textarea><label>비밀번호</label><input id="ep" type="password"><button class="btn primary" onclick="updateComment(${id})">수정</button></div>`)}
+async function updateComment(id){try{await api(`/api/comments/${id}`,{method:'PATCH',body:JSON.stringify({content:val('ec'),password:val('ep')})});closeModal();await detail(current.id);toast('댓글이 수정되었습니다.')}catch(e){toast(e.message)}}
+async function deleteComment(id){if(!needLogin()||!confirm('댓글을 삭제할까요?'))return;let pw=prompt('댓글 비밀번호');if(pw===null)return;try{await api(`/api/comments/${id}`,{method:'DELETE',body:JSON.stringify({password:pw})});await detail(current.id);toast('댓글이 삭제되었습니다.')}catch(e){toast(e.message)}}
+async function likeComment(id){if(!needLogin())return;try{await api(`/api/comments/${id}/likes`,{method:'POST'});await detail(current.id)}catch(e){toast(e.message)}}
+load(0);
+</script>
+</body></html>

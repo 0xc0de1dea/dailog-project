@@ -48,6 +48,7 @@ public class DailyService {
         );
 
         return DailyDto.Response.build(
+                savedDaily.getId(),
                 savedDaily.getTitle(),
                 savedDaily.getContent(),
                 savedDaily.getAuthor(),
@@ -69,6 +70,7 @@ public class DailyService {
 
         return pageDaily.map(daily ->
                 DailyDto.Response.build(
+                        daily.getId(),
                         daily.getTitle(),
                         daily.getContent(),
                         daily.getAuthor(),
@@ -101,11 +103,10 @@ public class DailyService {
                         () -> new ServiceException(ErrorCode.DAILY_NOT_FOUND)
                 );
 
-        long countLikes = dailyLikeRepository.countByDailyId(saved.getId());
-
         List<CommentDto.Response> commentDtoList = saved.getComments()
                 .stream()
                 .map(comment -> CommentDto.Response.build(
+                        comment.getId(),
                         comment.getDaily().getId(),
                         comment.getContent(),
                         comment.getAuthor(),
@@ -116,10 +117,11 @@ public class DailyService {
                 .toList();
 
         DailyDetailResponse detail = DailyDetailResponse.build(
+                saved.getId(),
                 saved.getTitle(),
                 saved.getContent(),
                 saved.getAuthor(),
-                countLikes,
+                saved.getLikes(),
                 saved.getCreatedAt(),
                 saved.getModifiedAt(),
                 commentDtoList
@@ -148,6 +150,7 @@ public class DailyService {
                 dailyRepository.findCommentsByIdQuerydsl(id)
                 .stream()
                 .map(comment -> CommentDto.Response.build(
+                        comment.getId(),
                         comment.getDaily().getId(),
                         comment.getContent(),
                         comment.getAuthor(),
@@ -158,6 +161,7 @@ public class DailyService {
                 .toList();
 
         DailyDetailResponse detail = DailyDetailResponse.build(
+                saved.getId(),
                 saved.getTitle(),
                 saved.getContent(),
                 saved.getAuthor(),
@@ -185,7 +189,7 @@ public class DailyService {
                 () -> new ServiceException(ErrorCode.DAILY_NOT_FOUND)
         );
 
-        if (savedUser.getName().equals(savedDaily.getAuthor())) {
+        if (!savedUser.getEmail().equals(savedDaily.getAuthor())) {
             throw new ServiceException(ErrorCode.USER_NOT_MATCHED);
         }
 
@@ -198,7 +202,10 @@ public class DailyService {
 
         savedDaily.update(title, content);
 
+        dailyCacheService.deleteDailyCache(id);
+
         return DailyDto.Response.build(
+                savedDaily.getId(),
                 savedDaily.getTitle(),
                 savedDaily.getContent(),
                 savedDaily.getAuthor(),
@@ -226,6 +233,8 @@ public class DailyService {
         }
 
         dailyRepository.deleteById(id);
+
+        dailyCacheService.deleteDailyCache(id);
     }
 
     @Transactional
@@ -255,6 +264,8 @@ public class DailyService {
         while (retry < 10) {
             try {
                 daily.like();
+
+                dailyCacheService.deleteDailyCache(dailyId);
                 return;
             } catch (ObjectOptimisticLockingFailureException e) {
                 retry++;

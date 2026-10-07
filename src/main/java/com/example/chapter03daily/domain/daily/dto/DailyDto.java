@@ -26,8 +26,10 @@ public class DailyDto {
     @AllArgsConstructor
     @Builder(access = AccessLevel.PRIVATE)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonPropertyOrder({"title", "content", "author", "likes", "createdAt", "modifiedAt"})
+    @JsonPropertyOrder({"id", "title", "content", "author", "likes", "createdAt", "modifiedAt"})
     public static class Response {
+
+        protected Long id;
 
         protected String title;
 
@@ -46,6 +48,7 @@ public class DailyDto {
         }
 
         public static Response build(
+                Long id,
                 String title,
                 String content,
                 String author,
@@ -54,6 +57,7 @@ public class DailyDto {
                 LocalDateTime modifiedAt
         ) {
             return Response.builder()
+                    .id(id)
                     .title(title)
                     .content(content)
                     .author(author)

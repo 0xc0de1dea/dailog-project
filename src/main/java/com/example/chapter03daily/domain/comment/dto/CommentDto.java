@@ -24,8 +24,10 @@ public class CommentDto {
     @AllArgsConstructor
     @Builder(access = AccessLevel.PRIVATE)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonPropertyOrder({"dailyId", "content", "author", "createdAt", "modifiedAt"})
+    @JsonPropertyOrder({"commentId", "dailyId", "content", "author", "createdAt", "modifiedAt"})
     public static class Response {
+
+        private Long commentId;
 
         private Long dailyId;
 
@@ -40,10 +42,12 @@ public class CommentDto {
         private LocalDateTime modifiedAt;
 
         public static Response build(
+                Long commentId,
                 Long dailyId, String content, String author, Long likes,
                 LocalDateTime createdAt, LocalDateTime modifiedAt
         ) {
             return Response.builder()
+                    .commentId(commentId)
                     .dailyId(dailyId)
                     .content(content)
                     .author(author)

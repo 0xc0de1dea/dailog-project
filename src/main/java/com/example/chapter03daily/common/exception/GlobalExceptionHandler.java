@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleException(
             Exception e, HttpServletRequest request
     ) {
-        System.out.println(e.getClass());
+        e.printStackTrace();
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ExceptionResponse.from(
