@@ -14,6 +14,11 @@ public enum ErrorCode {
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "요청값 검증에 실패했습니다."),
 
     /**
+     * TOKEN
+     */
+    INVALID_TOKEN(HttpStatus.CONFLICT, "잘못된 토큰."),
+
+    /**
      * User
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 유저를 찾을 수 없습니다."),

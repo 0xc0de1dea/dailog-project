@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1">
+
+    <title>Daily | 홈</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <a class="brand" href="daily.html">
+        Daily
+    </a>
+
+    <nav>
+        <span id="userName"></span>
+
+        <button
+                id="logoutBtn"
+                class="ghost">
+            로그아웃
+        </button>
+    </nav>
+
+</header>
+
+
+<main class="layout">
+
+
+    <!-- =========================
+         Daily
+    ========================== -->
+
+    <section class="panel">
+
+        <div class="panel-head">
+
+            <div>
+                <h2>Daily</h2>
+
+                <p class="muted">
+                    오늘의 이야기를 확인해보세요.
+                </p>
+            </div>
+
+            <button
+                    id="newDailyBtn"
+                    type="button"
+                    class="primary">
+                + Daily 작성
+            </button>
+
+        </div>
+
+        <div
+                id="dailyList"
+                class="daily-list">
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         채팅방
+    ========================== -->
+
+    <aside class="panel chat-rooms">
+
+        <div class="panel-head">
+
+            <div>
+
+                <h2>채팅방</h2>
+
+                <p class="muted">
+                    사람들과 이야기를 나눠보세요.
+                </p>
+
+            </div>
+
+            <button
+                    id="newRoomBtn"
+                    type="button"
+                    class="secondary">
+                + 방 만들기
+            </button>
+
+        </div>
+
+        <div id="roomList"></div>
+
+    </aside>
+
+</main>
+
+
+<!-- =========================
+     Daily 작성 Dialog
+========================== -->
+
+<dialog id="dailyDialog">
+
+    <form id="dailyForm">
+
+        <div class="dialog-head">
+
+            <h2>Daily 작성</h2>
+
+            <button
+                    type="button"
+                    id="closeDailyDialog"
+                    class="icon">
+                ×
+            </button>
+
+        </div>
+
+
+        <label>
+            제목
+
+            <input
+                    id="dailyTitle"
+                    name="title"
+                    type="text"
+                    required
+                    maxlength="100"
+                    autocomplete="off"
+                    placeholder="제목을 입력해주세요">
+        </label>
+
+
+        <label>
+            내용
+
+            <textarea
+                    id="dailyContent"
+                    name="content"
+                    required
+                    rows="8"
+                    placeholder="오늘의 이야기를 적어주세요"></textarea>
+        </label>
+
+
+        <label>
+            비밀번호
+
+            <input
+                    id="dailyPassword"
+                    name="password"
+                    type="password"
+                    required
+                    minlength="4"
+                    maxlength="100"
+                    autocomplete="new-password"
+                    placeholder="삭제할 때 사용할 비밀번호">
+        </label>
+
+
+        <div class="dialog-actions">
+
+            <button
+                    type="button"
+                    id="cancelDailyBtn"
+                    class="secondary">
+                취소
+            </button>
+
+            <button
+                    type="submit"
+                    id="saveDailyBtn"
+                    class="primary">
+                작성
+            </button>
+
+        </div>
+
+    </form>
+
+</dialog>
+
+
+<!-- =========================
+     채팅방 생성 Dialog
+========================== -->
+
+<dialog id="roomDialog">
+
+    <form
+            method="dialog"
+            id="roomForm">
+
+        <div class="dialog-head">
+
+            <h2>채팅방 만들기</h2>
+
+            <button
+                    type="button"
+                    class="icon">
+                ×
+            </button>
+
+        </div>
+
+        <label>
+            방 이름
+
+            <input
+                    id="roomName"
+                    required
+                    maxlength="50">
+        </label>
+
+        <div class="dialog-actions">
+
+            <button
+                    value="cancel"
+                    class="secondary">
+                취소
+            </button>
+
+            <button
+                    id="saveRoomBtn"
+                    value="default"
+                    class="primary">
+                만들기
+            </button>
+
+        </div>
+
+    </form>
+
+</dialog>
+
+
+<script src="js/common.js"></script>
+<script src="js/daily.js"></script>
+<script src="js/chat.js"></script>
+
+</body>
+</html>

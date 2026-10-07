@@ -42,10 +42,10 @@ public class UserService {
 
     @Transactional
     public String login(LoginRequest request) {
-        String username = request.getUsername();
+        String email = request.getEmail();
         String password = request.getPassword();
 
-        User user = userRepository.findUserByName(username)
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(
                         () -> new ServiceException(ErrorCode.USER_NOT_FOUND)
                 );

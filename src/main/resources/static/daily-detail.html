@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1">
+
+    <title>Daily 상세</title>
+
+    <link
+            rel="stylesheet"
+            href="css/style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <a
+            class="brand"
+            href="daily.html">
+        Daily
+    </a>
+
+    <nav>
+
+        <span id="userName"></span>
+
+        <a
+                href="daily.html"
+                class="nav-link">
+            목록
+        </a>
+
+        <button
+                id="logoutBtn"
+                class="ghost">
+            로그아웃
+        </button>
+
+    </nav>
+
+</header>
+
+
+<main class="detail-layout">
+
+    <!-- =========================
+         Daily + 댓글
+    ========================== -->
+
+    <section>
+
+        <!-- Daily 상세 -->
+
+        <article
+                id="dailyDetail"
+                class="panel detail-card">
+
+            <div class="loading">
+                불러오는 중...
+            </div>
+
+        </article>
+
+
+        <!-- 댓글 -->
+
+        <section class="panel">
+
+            <div class="panel-head">
+
+                <h2>댓글</h2>
+
+            </div>
+
+
+            <form id="commentForm" class="comment-write">
+
+                <textarea
+                        id="commentContent"
+                        rows="5"
+                        maxlength="100"
+                        placeholder="댓글을 남겨보세요."
+                        required
+                ></textarea>
+
+                <div class="comment-write-bottom">
+
+                    <input
+                            type="password"
+                            id="commentPassword"
+                            maxlength="100"
+                            placeholder="비밀번호"
+                            autocomplete="new-password"
+                            required
+                    >
+
+                    <button
+                            class="primary"
+                            type="submit"
+                    >
+                        등록
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <div id="commentList"></div>
+
+        </section>
+
+    </section>
+
+
+    <!-- =========================
+         채팅
+    ========================== -->
+
+    <aside class="panel chat-panel">
+
+        <div class="panel-head">
+
+            <div>
+
+                <h2 id="roomTitle">
+                    채팅
+                </h2>
+
+                <p
+                        id="connectionState"
+                        class="muted">
+                    연결 준비 중
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+                id="chatMessages"
+                class="chat-messages">
+        </div>
+
+
+        <form
+                id="chatForm"
+                class="chat-input">
+
+            <input
+                    id="chatInput"
+                    autocomplete="off"
+                    placeholder="메시지를 입력하세요">
+
+            <button
+                    class="primary"
+                    type="submit">
+                전송
+            </button>
+
+        </form>
+
+    </aside>
+
+</main>
+
+
+<!-- =========================
+     Daily 수정
+========================== -->
+
+<dialog id="editDailyDialog">
+
+    <form id="editDailyForm">
+
+        <div class="dialog-head">
+
+            <h2>Daily 수정</h2>
+
+            <button
+                    type="button"
+                    id="closeEditDailyDialog"
+                    class="icon">
+                ×
+            </button>
+
+        </div>
+
+
+        <label>
+            제목
+
+            <input
+                    id="editDailyTitle"
+                    type="text"
+                    maxlength="100"
+                    required>
+        </label>
+
+
+        <label>
+            내용
+
+            <textarea
+                    id="editDailyContent"
+                    rows="8"
+                    required></textarea>
+        </label>
+
+
+        <label>
+            비밀번호
+
+            <input
+                    id="editDailyPassword"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                    placeholder="작성할 때 입력한 비밀번호">
+        </label>
+
+
+        <div class="dialog-actions">
+
+            <button
+                    type="button"
+                    id="cancelEditDailyBtn"
+                    class="secondary">
+                취소
+            </button>
+
+            <button
+                    type="submit"
+                    id="updateDailyBtn"
+                    class="primary">
+                수정
+            </button>
+
+        </div>
+
+    </form>
+
+</dialog>
+
+
+<script src="js/common.js"></script>
+
+<script src="js/daily.js"></script>
+
+<script src="js/comment.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script src="js/chat.js"></script>
+
+</body>
+</html>
