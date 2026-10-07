@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+    >
+
+    <title>Daily Chat</title>
+
+    <link
+            rel="stylesheet"
+            href="css/style.css"
+    >
+
+</head>
+
+
+<body class="chat-page">
+
+
+<header class="chat-topbar">
+
+    <div class="chat-brand-area">
+
+        <a
+                href="daily.html"
+                class="chat-brand"
+        >
+            Daily
+        </a>
+
+        <span class="chat-brand-divider"></span>
+
+        <span class="chat-brand-title">
+            Chat
+        </span>
+
+    </div>
+
+
+    <div class="chat-user-area">
+
+        <span
+                id="userName"
+                class="chat-user-name"
+        ></span>
+
+        <a
+                href="daily.html"
+                class="chat-nav-button"
+        >
+            Daily
+        </a>
+
+        <button
+                id="logoutBtn"
+                type="button"
+                class="chat-nav-button"
+        >
+            로그아웃
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<main class="chat-layout">
+
+
+    <!-- =========================================
+         왼쪽 채팅방 목록
+    ========================================== -->
+
+    <aside class="chat-sidebar">
+
+        <div class="chat-sidebar-header">
+
+            <div>
+
+                <div class="chat-sidebar-title">
+                    채팅
+                </div>
+
+                <div class="chat-sidebar-subtitle">
+                    대화방을 선택하세요
+                </div>
+
+            </div>
+
+
+            <button
+                    id="newRoomBtn"
+                    type="button"
+                    class="chat-new-room-button"
+                    title="새 채팅방"
+            >
+                +
+            </button>
+
+        </div>
+
+
+        <div
+                id="roomList"
+                class="chat-room-list"
+        >
+
+            <div class="chat-room-loading">
+                채팅방을 불러오는 중...
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         오른쪽 채팅 영역
+    ========================================== -->
+
+    <section class="chat-main">
+
+
+        <!-- 방을 선택하지 않았을 때 -->
+
+        <div
+                id="chatEmpty"
+                class="chat-empty"
+        >
+
+            <div class="chat-empty-icon">
+                💬
+            </div>
+
+            <h2>
+                채팅을 시작해보세요
+            </h2>
+
+            <p>
+                왼쪽에서 채팅방을 선택하거나<br>
+                새로운 채팅방을 만들어보세요.
+            </p>
+
+            <button
+                    id="emptyNewRoomBtn"
+                    type="button"
+                    class="chat-empty-button"
+            >
+                새 채팅방 만들기
+            </button>
+
+        </div>
+
+
+
+        <!-- 실제 채팅 화면 -->
+
+        <div
+                id="chatWorkspace"
+                class="chat-workspace"
+                hidden
+        >
+
+
+            <!-- 채팅방 상단 -->
+
+            <header class="chat-header">
+
+                <div class="chat-header-left">
+
+                    <div
+                            id="roomAvatar"
+                            class="chat-room-avatar"
+                    >
+                        #
+                    </div>
+
+                    <div>
+
+                        <h1
+                                id="roomTitle"
+                                class="chat-room-title"
+                        >
+                            채팅방
+                        </h1>
+
+                        <div
+                                id="connectionState"
+                                class="chat-connection"
+                        >
+                            연결 준비 중
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- 메시지 -->
+
+            <div
+                    id="chatMessages"
+                    class="chat-messages"
+            >
+
+            </div>
+
+
+
+            <!-- 입력 -->
+
+            <form
+                    id="chatForm"
+                    class="chat-input-area"
+            >
+
+                <div class="chat-input-wrapper">
+
+                    <input
+                            id="chatInput"
+                            type="text"
+                            autocomplete="off"
+                            maxlength="1000"
+                            placeholder="메시지를 입력하세요..."
+                    >
+
+                    <button
+                            type="submit"
+                            class="chat-send-button"
+                    >
+                        <span>전송</span>
+                        <span class="chat-send-icon">➤</span>
+                    </button>
+
+                </div>
+
+            </form>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<script src="js/common.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script src="js/chat.js"></script>
+
+
+</body>
+
+</html>

@@ -4,31 +4,51 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 public class RedisConfig {
 
     @Bean
+    public JacksonJsonRedisSerializer<RedisChatMessage> chatRedisSerializer() {
+
+        return new JacksonJsonRedisSerializer<>(
+                RedisChatMessage.class
+        );
+    }
+
+    @Bean
     public RedisTemplate<String, Object> redisTemplate(
-            RedisConnectionFactory connectionFactory
+            RedisConnectionFactory connectionFactory,
+            JacksonJsonRedisSerializer<RedisChatMessage> chatRedisSerializer
     ) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
 
-        template.setConnectionFactory(connectionFactory);
+        RedisTemplate<String, Object> template =
+                new RedisTemplate<>();
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        template.setConnectionFactory(
+                connectionFactory
+        );
 
-        GenericJacksonJsonRedisSerializer serializer =
-                new GenericJacksonJsonRedisSerializer(objectMapper);
+        template.setKeySerializer(
+                new StringRedisSerializer()
+        );
 
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(serializer);
+        /*
+         * 채팅 메시지는 Redis에 JSON으로 저장/전달
+         */
+        template.setValueSerializer(
+                chatRedisSerializer
+        );
 
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(serializer);
+        template.setHashKeySerializer(
+                new StringRedisSerializer()
+        );
+
+        template.setHashValueSerializer(
+                chatRedisSerializer
+        );
 
         template.afterPropertiesSet();
 

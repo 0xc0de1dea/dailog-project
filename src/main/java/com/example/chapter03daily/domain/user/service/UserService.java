@@ -1,5 +1,6 @@
 package com.example.chapter03daily.domain.user.service;
 
+import com.example.chapter03daily.common.enums.UserRoleEnum;
 import com.example.chapter03daily.common.exception.ErrorCode;
 import com.example.chapter03daily.common.exception.ServiceException;
 import com.example.chapter03daily.common.utils.JwtUtil;
@@ -27,7 +28,7 @@ public class UserService {
                         request.getName(),
                         request.getEmail(),
                         passwordEncoder.encode(request.getPassword()),
-                        request.getRole()
+                        UserRoleEnum.NORMAL
                 )
         );
 
