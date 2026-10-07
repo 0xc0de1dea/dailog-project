@@ -383,45 +383,100 @@ User sender = AuthenticatedUser.fromPrincipal(principal);
 
 ```text
 dailog/
-├── src/
-│   ├── main/
-│   │   ├── java/com/example/dailog/
-│   │   │   ├── common/
-│   │   │   │   ├── config/
-│   │   │   │   │   ├── redis/
-│   │   │   │   │   ├── SecurityConfig
-│   │   │   │   │   └── WebSocketConfig
-│   │   │   │   ├── filter/
-│   │   │   │   │   └── JwtFilter
-│   │   │   │   ├── interceptor/
-│   │   │   │   │   └── StompAuthInterceptor
-│   │   │   │   └── exception/
-│   │   │   │
-│   │   │   ├── domain/
-│   │   │   │   ├── user/
-│   │   │   │   ├── daily/
-│   │   │   │   ├── comment/
-│   │   │   │   ├── chat/
-│   │   │   │   └── chatroom/
-│   │   │   │
-│   │   │   └── DailogApplication
-│   │   │
-│   │   └── resources/
-│   │       └── static/
-│   │           ├── daily.html
-│   │           ├── daily-detail.html
-│   │           ├── chat.html
-│   │           └── js/
-│   │
-│   └── test/
-│       ├── JwtUtilTest
-│       ├── DailyControllerTest
-│       ├── DailyServiceTest
-│       └── DailyServiceIntegrationTest
+├── 📄 build.gradle
+├── 📄 settings.gradle
+├── 📄 Dockerfile
+├── 📄 docker-compose.yml
 │
-├── Dockerfile
-├── docker-compose.yml
-└── build.gradle
+├── 📁 gradle/
+│   └── 📁 wrapper/
+│
+└── 📁 src/
+    │
+    ├── 📁 main/
+    │   │
+    │   ├── 📁 java/
+    │   │   └── 📁 com.example.dailog/
+    │   │       │
+    │   │       ├── 🚀 Application
+    │   │       │
+    │   │       ├── 📁 common/
+    │   │       │   ├── 📁 config/
+    │   │       │   │   └── Spring / JPA / QueryDSL / Security / WebSocket 설정
+    │   │       │   ├── 📁 config/redis/
+    │   │       │   │   └── Redis Cache / Pub-Sub 설정 및 메시지 처리
+    │   │       │   ├── 📁 constant/
+    │   │       │   ├── 📁 dto/
+    │   │       │   ├── 📁 entity/
+    │   │       │   ├── 📁 enums/
+    │   │       │   ├── 📁 exception/
+    │   │       │   ├── 📁 filter/
+    │   │       │   │   └── JWT 인증 필터
+    │   │       │   ├── 📁 interceptor/
+    │   │       │   │   └── STOMP WebSocket 인증
+    │   │       │   └── 📁 utils/
+    │   │       │       └── JWT 유틸리티
+    │   │       │
+    │   │       └── 📁 domain/
+    │   │           │
+    │   │           ├── 📁 user/
+    │   │           │   ├── 📁 controller/
+    │   │           │   ├── 📁 dto/
+    │   │           │   ├── 📁 entity/
+    │   │           │   ├── 📁 repository/
+    │   │           │   └── 📁 service/
+    │   │           │
+    │   │           ├── 📁 daily/
+    │   │           │   ├── 📁 controller/
+    │   │           │   ├── 📁 dto/
+    │   │           │   ├── 📁 entity/
+    │   │           │   ├── 📁 repository/
+    │   │           │   │   └── Spring Data JPA + QueryDSL Custom Repository
+    │   │           │   └── 📁 service/
+    │   │           │       └── Daily Business Logic + Redis Cache
+    │   │           │
+    │   │           ├── 📁 comment/
+    │   │           │   ├── 📁 controller/
+    │   │           │   ├── 📁 dto/
+    │   │           │   ├── 📁 entity/
+    │   │           │   ├── 📁 repository/
+    │   │           │   └── 📁 service/
+    │   │           │
+    │   │           ├── 📁 chat/
+    │   │           │   ├── 📁 controller/
+    │   │           │   │   └── REST API + STOMP Message Handler
+    │   │           │   ├── 📁 dto/
+    │   │           │   ├── 📁 entity/
+    │   │           │   ├── 📁 repository/
+    │   │           │   └── 📁 service/
+    │   │           │       └── Chat Query / Message Processing
+    │   │           │
+    │   │           └── 📁 chatroom/
+    │   │               ├── 📁 controller/
+    │   │               ├── 📁 entity/
+    │   │               └── 📁 repository/
+    │   │
+    │   ├── 📁 resources/
+    │   │   ├── application.yml
+    │   │   ├── application-secret.yml
+    │   │   │
+    │   │   └── 📁 static/
+    │   │       ├── HTML Pages
+    │   │       ├── 📁 css/
+    │   │       └── 📁 js/
+    │   │           └── Frontend Logic
+    │   │
+    │   └── 📁 test/
+    │       └── 📁 java/
+    │           └── 📁 com.example.dailog/
+    │               ├── 📁 common/
+    │               │   └── JWT Utility Tests
+    │               │
+    │               └── 📁 domain/
+    │                   └── 📁 daily/
+    │                       ├── 📁 controller/
+    │                       └── 📁 service/
+    │                           └── Unit / Integration Tests
 ```
 
 ---
