@@ -61,6 +61,54 @@
 
         </div>
 
+
+        <!-- =========================
+             Daily 검색
+        ========================== -->
+
+        <form id="dailySearchForm" class="daily-search">
+
+            <div class="search-fields">
+
+                <label>
+                    제목
+                    <input
+                            id="dailySearchTitle"
+                            type="text"
+                            placeholder="제목을 검색해주세요"
+                            autocomplete="off">
+                </label>
+
+                <label>
+                    내용
+                    <input
+                            id="dailySearchContent"
+                            type="text"
+                            placeholder="내용을 검색해주세요"
+                            autocomplete="off">
+                </label>
+
+            </div>
+
+            <div class="search-actions">
+
+                <button
+                        type="submit"
+                        class="primary">
+                    🔍 검색
+                </button>
+
+                <button
+                        type="button"
+                        id="resetDailySearch"
+                        class="secondary">
+                    초기화
+                </button>
+
+            </div>
+
+        </form>
+
         <div
                 id="dailyList"
                 class="daily-list">

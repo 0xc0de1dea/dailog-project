@@ -1834,3 +1834,110 @@ dialog form {
     }
 
 }
+
+
+/* ==================================================
+  Daily 검색
+================================================== */
+
+.daily-search {
+   margin: 20px 0;
+   padding: 16px;
+
+   border: 1px solid #e5e7eb;
+   border-radius: 12px;
+
+   background: #fafafa;
+}
+
+
+.search-fields {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 12px;
+}
+
+
+.search-fields label {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.search-fields input {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 10px 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background: #fff;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
+}
+
+
+.search-fields input:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+            0 0 0 3px
+            rgba(99, 102, 241, 0.12);
+}
+
+
+.search-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+
+.search-actions button {
+    min-width: 80px;
+}
+
+
+/* =========================
+   모바일
+========================= */
+
+@media (max-width: 700px) {
+
+    .search-fields {
+        grid-template-columns: 1fr;
+    }
+
+
+    .search-actions {
+        justify-content: stretch;
+    }
+
+
+    .search-actions button {
+        flex: 1;
+    }
+}

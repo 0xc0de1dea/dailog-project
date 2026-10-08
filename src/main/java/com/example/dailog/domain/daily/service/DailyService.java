@@ -81,6 +81,16 @@ public class DailyService {
     }
 
     @Transactional(readOnly = true)
+    public Page<DailyDto.Response> searchDailyByMulticondition(String title, String content, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size
+        );
+
+        return dailyRepository.searchDailyByMultiCondition(title, content, pageable);
+    }
+
+    @Transactional(readOnly = true)
     public Page<DailyDto.Response> findAllWithQuerydsl(int page, int size) {
         Pageable pageable = PageRequest.of(
                 page,

@@ -28,6 +28,17 @@ public class DailyController {
                 .body(ApiResponse.created(dailyService.create(user, request)));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<ApiResponse.PageResponse<DailyDto.Response>>> searchDailyByMulticondition(
+            @RequestParam(defaultValue = "") String title,
+            @RequestParam(defaultValue = "") String content,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.ok(dailyService.searchDailyByMulticondition(title, content, page, size)));
+    }
+
     @GetMapping
     public ResponseEntity<ApiResponse<ApiResponse.PageResponse<DailyDto.Response>>> findAll(
             @RequestParam(defaultValue = "0") int page,

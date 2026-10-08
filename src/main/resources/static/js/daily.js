@@ -1,6 +1,8 @@
 const DAILY = {
     list: '/api/dailies',
 
+    search: '/api/dailies/search',
+
     one: id =>
         `/api/dailies/${id}`,
 
@@ -10,10 +12,10 @@ const DAILY = {
 
 
 /* ==================================================
-   Daily 목록
+   Daily 목록 / 멀티 조건 검색
 ================================================== */
 
-async function loadDailies() {
+async function loadDailies(page = 0) {
 
     const box =
         document.getElementById('dailyList');
@@ -25,27 +27,106 @@ async function loadDailies() {
         '<div class="loading">불러오는 중...</div>';
 
 
+    const titleEl =
+        document.getElementById('dailySearchTitle');
+
+    const contentEl =
+        document.getElementById('dailySearchContent');
+
+
+    const title =
+        titleEl?.value.trim() || '';
+
+    const content =
+        contentEl?.value.trim() || '';
+
+
     try {
 
+        /*
+         * =========================
+         * 검색 여부 판단
+         * =========================
+         */
+
+        const isSearch =
+            title !== '' ||
+            content !== '';
+
+
+        let url;
+
+
+        /*
+         * =========================
+         * 검색
+         * =========================
+         */
+
+        if (isSearch) {
+
+            const params =
+                new URLSearchParams();
+
+            params.set('title', title);
+            params.set('content', content);
+            params.set('page', page);
+            params.set('size', 10);
+
+
+            url =
+                `${DAILY.search}?${params.toString()}`;
+
+        }
+
+
+        /*
+         * =========================
+         * 전체 목록
+         * =========================
+         */
+
+        else {
+
+            const params =
+                new URLSearchParams();
+
+            params.set('page', page);
+            params.set('size', 10);
+
+
+            url =
+                `${DAILY.list}?${params.toString()}`;
+        }
+
+
+        /*
+         * =========================
+         * API 호출
+         * =========================
+         */
+
         const r =
-            await api(DAILY.list);
+            await api(url);
+
 
         const data =
             dataOf(r);
 
 
         /*
-          서버 응답
+         * 서버 응답
+         *
+         * {
+         *   code: 200,
+         *   data: {
+         *      content: [...],
+         *      pageInfo: {...}
+         *   },
+         *   success: true
+         * }
+         */
 
-          {
-            code: 200,
-            data: {
-              content: [...],
-              pageInfo: {...}
-            },
-            success: true
-          }
-        */
 
         const arr =
             Array.isArray(data)
@@ -55,14 +136,28 @@ async function loadDailies() {
                     : [];
 
 
+        /*
+         * =========================
+         * 결과 없음
+         * =========================
+         */
+
         if (arr.length === 0) {
 
             box.innerHTML =
-                '<div class="empty">작성된 Daily가 없습니다.</div>';
+                isSearch
+                    ? '<div class="empty">검색된 Daily가 없습니다.</div>'
+                    : '<div class="empty">작성된 Daily가 없습니다.</div>';
 
             return;
         }
 
+
+        /*
+         * =========================
+         * Daily 목록 출력
+         * =========================
+         */
 
         box.innerHTML =
             arr.map(d => {
@@ -72,26 +167,26 @@ async function loadDailies() {
 
 
                 return `
-          <a
-            class="daily-item"
-            href="daily-detail.html?id=${encodeURIComponent(id)}">
+    <a
+class="daily-item"
+href="daily-detail.html?id=${encodeURIComponent(id)}">
 
-            <h3>
-              ${esc(d.title || '제목 없음')}
-            </h3>
+    <h3>
+    ${esc(d.title || '제목 없음')}
+</h3>
 
-            <p>
-              ${esc(d.content || '')}
-            </p>
+<p>
+    ${esc(d.content || '')}
+</p>
 
-            <div class="meta">
-              ${esc(authorName(d.author))}
-              · ${esc(fmtDate(d.createdAt))}
-              · ♥ ${d.likes ?? 0}
-            </div>
+<div class="meta">
+    ${esc(authorName(d.author))}
+    · ${esc(fmtDate(d.createdAt))}
+    · ♥ ${d.likes ?? 0}
+</div>
 
-          </a>
-        `;
+</a>
+`;
 
             }).join('');
 
@@ -99,19 +194,19 @@ async function loadDailies() {
     } catch (e) {
 
         console.error(
-            'Daily 목록 불러오기 오류:',
+            'Daily 목록 / 검색 오류:',
             e
         );
 
 
         box.innerHTML = `
-      <div class="empty">
-        ${esc(
-            e.message ||
-            'Daily를 불러오지 못했습니다.'
-        )}
-      </div>
-    `;
+<div class="empty">
+    ${esc(
+    e.message ||
+    'Daily를 불러오지 못했습니다.'
+)}
+</div>
+`;
     }
 }
 
@@ -812,6 +907,128 @@ function initEditDailyDialog() {
 
 
 /* ==================================================
+   Daily 검색 초기화
+================================================== */
+
+function initDailySearch() {
+
+    const form =
+        document.getElementById('dailySearchForm');
+
+    const titleEl =
+        document.getElementById('dailySearchTitle');
+
+    const contentEl =
+        document.getElementById('dailySearchContent');
+
+    const resetBtn =
+        document.getElementById('resetDailySearch');
+
+
+    /*
+     * 검색
+     */
+
+    form?.addEventListener(
+        'submit',
+        async e => {
+
+            e.preventDefault();
+
+
+            const title =
+                titleEl?.value.trim() || '';
+
+            const content =
+                contentEl?.value.trim() || '';
+
+
+            /*
+             * 제목과 내용이 모두 비어있으면
+             * 전체 목록을 검색 결과로 보여주지 않는다.
+             */
+
+            if (!title && !content) {
+
+                alert(
+                    '제목 또는 내용을 입력해주세요.'
+                );
+
+                titleEl?.focus();
+
+                return;
+            }
+
+
+            await loadDailies(0);
+        }
+    );
+
+
+    /*
+     * 초기화
+     *
+     * 초기화 버튼을 누르면
+     * 검색 조건을 모두 제거하고
+     * 전체 Daily를 다시 불러온다.
+     */
+
+    resetBtn?.addEventListener(
+        'click',
+        async () => {
+
+            if (titleEl) {
+                titleEl.value = '';
+            }
+
+            if (contentEl) {
+                contentEl.value = '';
+            }
+
+
+            await loadDailies(0);
+        }
+    );
+
+
+    /*
+     * 제목 Enter
+     */
+
+    titleEl?.addEventListener(
+        'keydown',
+        e => {
+
+            if (e.key === 'Enter') {
+
+                e.preventDefault();
+
+                form?.requestSubmit();
+            }
+        }
+    );
+
+
+    /*
+     * 내용 Enter
+     */
+
+    contentEl?.addEventListener(
+        'keydown',
+        e => {
+
+            if (e.key === 'Enter') {
+
+                e.preventDefault();
+
+                form?.requestSubmit();
+            }
+        }
+    );
+}
+
+
+/* ==================================================
    초기화
 ================================================== */
 
@@ -837,6 +1054,9 @@ document.addEventListener(
 
 
         initEditDailyDialog();
+
+
+        initDailySearch();
 
     }
 );

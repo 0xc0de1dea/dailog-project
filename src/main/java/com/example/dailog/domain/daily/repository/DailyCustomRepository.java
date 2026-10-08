@@ -14,5 +14,7 @@ public interface DailyCustomRepository {
 
     List<Comment> findCommentsByIdQuerydsl(Long id);
 
+    Page<DailyDto.Response> searchDailyByMultiCondition(String title, String content, Pageable pageable);
+
     Page<DailyDto.Response> findAllWithQuerydsl(Pageable pageable);
 }
