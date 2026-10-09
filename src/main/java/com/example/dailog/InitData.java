@@ -24,8 +24,8 @@ public class InitData {
     public void init() {
         List<User> userList =
                 List.of(
-                        new User("김동현", "user1@email.com", "12345678", UserRoleEnum.ADMIN),
-                        new User("동현킴", "user2@email.com", "12345678", UserRoleEnum.NORMAL)
+                        new User("이재환", "user1@email.com", "12345678", UserRoleEnum.ADMIN),
+                        new User("재환이", "user2@email.com", "12345678", UserRoleEnum.NORMAL)
                 );
 
         for (User user : userList) {
