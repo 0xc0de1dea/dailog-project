@@ -1,5 +1,7 @@
 package com.example.dailog.domain.user.service;
 
+import com.example.dailog.common.auth.dto.TokenResponse;
+import com.example.dailog.common.auth.service.RefreshTokenService;
 import com.example.dailog.common.enums.UserRoleEnum;
 import com.example.dailog.common.exception.ErrorCode;
 import com.example.dailog.common.exception.ServiceException;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -42,20 +45,49 @@ public class UserService {
     }
 
     @Transactional
-    public String login(LoginRequest request) {
+    public TokenResponse login(LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(
-                        () -> new ServiceException(ErrorCode.USER_NOT_FOUND)
+                        () -> new ServiceException(
+                                ErrorCode.USER_NOT_FOUND
+                        )
                 );
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new ServiceException(ErrorCode.INVALID_PASSWORD);
+        if (!passwordEncoder.matches(
+                password,
+                user.getPassword()
+        )) {
+            throw new ServiceException(
+                    ErrorCode.INVALID_PASSWORD
+            );
         }
 
-        return jwtUtil.generateToken(user.getEmail(), user.getRoleEnum());
+        // 1. Access Token 발급
+        String accessToken = jwtUtil.generateAccessToken(
+                user.getEmail(),
+                user.getRoleEnum()
+        );
+
+        // 2. Refresh Token 발급
+        String refreshToken = jwtUtil.generateRefreshToken(
+                user.getEmail(),
+                user.getRoleEnum()
+        );
+
+        // 3. Redis에 Refresh Token 저장
+        refreshTokenService.save(
+                user.getEmail(),
+                refreshToken
+        );
+
+        // 4. 토큰 응답 반환
+        return new TokenResponse(
+                accessToken,
+                refreshToken
+        );
     }
 
     @Transactional(readOnly = true)

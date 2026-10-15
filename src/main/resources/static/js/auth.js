@@ -1,53 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
+ const loginForm = document.getElementById('loginForm');
 
- const login = document.getElementById('loginForm');
-
- if (login) {
-  login.addEventListener('submit', async e => {
+ // 로그인
+ if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
    e.preventDefault();
 
    const msg = document.getElementById('message');
 
    try {
-    const r = await api('/api/users/login', {
+    // 로그인 요청에는 기존 JWT를 보내지 않음
+    const response = await api('/api/users/login', {
      method: 'POST',
+     auth: false,
      body: JSON.stringify({
       email: document.getElementById('email').value,
       password: document.getElementById('password').value
      })
     });
 
-    /*
-     * 백엔드:
-     *
-     * ResponseEntity<ApiResponse<String>>
-     *
-     * userService.login()에서 JWT 문자열을 반환하므로
-     * dataOf(r)는 JWT 문자열이 된다.
-     */
-    const token = dataOf(r);
+    const result = dataOf(response);
+    const accessToken = result?.accessToken;
+    const refreshToken = result?.refreshToken;
 
-    if (!token || typeof token !== 'string') {
+    if (!accessToken || !refreshToken) {
      throw new Error(
-         '로그인 응답에서 JWT를 찾을 수 없습니다.'
+         '로그인 응답에 Access Token 또는 Refresh Token이 없습니다.'
      );
     }
 
-    localStorage.setItem('dailyJwt', token);
+    localStorage.setItem('dailyJwt', accessToken);
+    localStorage.setItem('dailyRefreshToken', refreshToken);
 
     location.href = 'daily.html';
-
    } catch (err) {
-    msg.textContent = err.message;
+    if (msg) msg.textContent = err.message;
    }
   });
  }
 
+ // 회원가입
+ const signupForm = document.getElementById('signupForm');
 
- const signup = document.getElementById('signupForm');
-
- if (signup) {
-  signup.addEventListener('submit', async e => {
+ if (signupForm) {
+  signupForm.addEventListener('submit', async (e) => {
    e.preventDefault();
 
    const msg = document.getElementById('message');
@@ -55,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
    try {
     await api('/api/users/register', {
      method: 'POST',
+     auth: false,
      body: JSON.stringify({
       name: document.getElementById('name').value,
       email: document.getElementById('email').value,
@@ -63,13 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     alert('회원가입이 완료되었습니다.');
-
     location.href = 'login.html';
-
    } catch (err) {
-    msg.textContent = err.message;
+    if (msg) msg.textContent = err.message;
    }
   });
  }
-
 });

@@ -2,6 +2,7 @@ package com.example.dailog.common.filter;
 
 import com.example.dailog.common.enums.UserRoleEnum;
 import com.example.dailog.common.utils.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,41 +26,76 @@ import static com.example.dailog.common.constant.MagicNumber.SEVEN;
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final String AUTH_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader(AUTH_HEADER);
+        String authorizationHeader =
+                request.getHeader(AUTH_HEADER);
 
-        if (authorizationHeader == null || authorizationHeader.isBlank()) {
+        if (authorizationHeader == null
+                || !authorizationHeader.startsWith(BEARER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String jwt = authorizationHeader.substring(SEVEN);
+        String jwt = authorizationHeader
+                .substring(SEVEN);
 
-        if (!jwtUtil.validateToken(jwt)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+        if (!jwtUtil.validateAccessToken(jwt)) {
+            SecurityContextHolder.clearContext();
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(
+                    "{\"error\":\"Invalid or expired access token\"}"
+            );
             return;
         }
 
-        String email = jwtUtil.extractEmail(jwt);
+        try {
+            String email = jwtUtil.extractEmail(jwt);
+            String role = jwtUtil.extractRole(jwt);
 
-        String role = jwtUtil.extractRole(jwt);
+            UserRoleEnum roleEnum = UserRoleEnum.valueOf(role);
 
-        UserRoleEnum roleEnum = UserRoleEnum.valueOf(role);
+            User user = new User(
+                    email,
+                    "",
+                    List.of(roleEnum::getRole)
+            );
 
-//        request.setAttribute("username", username);
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            user,
+                            null,
+                            user.getAuthorities()
+                    );
 
-        User user = new User(email, "", List.of(roleEnum::getRole));
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                user, null, user.getAuthorities()
-        ));
+            filterChain.doFilter(request, response);
 
-        filterChain.doFilter(request, response);
+        } catch (JwtException | IllegalArgumentException e) {
+            SecurityContextHolder.clearContext();
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(
+                    "{\"error\":\"Invalid access token claims\"}"
+            );
+        }
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        return path.equals("/api/auth/reissue")
+                || path.equals("/api/auth/logout");
     }
 }

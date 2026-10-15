@@ -35,7 +35,7 @@ class JwtUtilTest {
         UserRoleEnum role = UserRoleEnum.ADMIN;
 
         // when
-        String jwtToken = jwtUtil.generateToken(email, role);
+        String jwtToken = jwtUtil.generateAccessToken(email, role);
         String jwt = jwtToken.substring(BEARER_PREFIX.length());
 
         // then
@@ -60,7 +60,7 @@ class JwtUtilTest {
         String email = "user1@email.com";
         UserRoleEnum role = UserRoleEnum.ADMIN;
 
-        String token = jwtUtil.generateToken(email, role)
+        String token = jwtUtil.generateAccessToken(email, role)
                 .substring(BEARER_PREFIX.length());
 
         // when

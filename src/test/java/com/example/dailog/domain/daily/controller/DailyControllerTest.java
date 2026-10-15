@@ -59,7 +59,7 @@ class DailyControllerTest {
                 )
         );
 
-        token = jwtUtil.generateToken(user.getEmail(), user.getRoleEnum());
+        token = jwtUtil.generateAccessToken(user.getEmail(), user.getRoleEnum());
     }
 
     @Test

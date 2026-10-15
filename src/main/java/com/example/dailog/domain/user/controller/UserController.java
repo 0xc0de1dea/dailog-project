@@ -1,5 +1,6 @@
 package com.example.dailog.domain.user.controller;
 
+import com.example.dailog.common.auth.dto.TokenResponse;
 import com.example.dailog.common.dto.ApiResponse;
 import com.example.dailog.domain.user.dto.UserDto;
 import com.example.dailog.domain.user.dto.request.LoginRequest;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(
+    public ResponseEntity<ApiResponse<TokenResponse>> login(
             @Valid @RequestBody LoginRequest request
     ) {
         return ResponseEntity.status(HttpStatus.OK)

@@ -20,7 +20,12 @@ import java.util.Date;
 public class JwtUtil {
 
     public static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private static final long ACCESS_TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private static final long REFRESH_TOKEN_TIME = 14L * 24 * 60 * 60 * 1000; // 14일
+
+    private static final String TOKEN_TYPE = "tokenType";
+    private static final String ACCESS = "ACCESS";
+    private static final String REFRESH = "REFRESH";
 
     @Value("${jwt.secret.key}")           // application.yml 에 있는 key 가져옴
     private String secretKeyString;
@@ -43,43 +48,85 @@ public class JwtUtil {
     }
 
 
-    // 토큰 생성
-    public String generateToken(String email, UserRoleEnum role) {
+    // Access Token 생성
+    public String generateAccessToken(
+            String email,
+            UserRoleEnum role
+    ) {
+        return generateToken(email, role, ACCESS, ACCESS_TOKEN_TIME);
+    }
+
+    // Refresh Token 생성
+    public String generateRefreshToken(
+            String email,
+            UserRoleEnum role
+    ) {
+        return generateToken(email, role, REFRESH, REFRESH_TOKEN_TIME);
+    }
+
+    private String generateToken(
+            String email,
+            UserRoleEnum role,
+            String tokenType,
+            long expirationTime
+    ) {
         Date now = new Date();
+
         return BEARER_PREFIX + Jwts.builder()
+                .subject(email)
                 .claim("email", email)
-                .claim("role", role)
+                .claim("role", role.name())
+                .claim(TOKEN_TYPE, tokenType)
                 .issuedAt(now)
-                .expiration(new Date(now.getTime() + TOKEN_TIME))
+                .expiration(new Date(now.getTime() + expirationTime))
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
 
-    // 토큰 검증
-    public boolean validateToken(String token) {
-        if (token == null || token.isBlank()) return false;
+    // 서명 및 만료 검증
+    private Claims parseClaims(String token) {
+        return parser.parseSignedClaims(token).getPayload();
+    }
+
+    // Access Token 검증
+    public boolean validateAccessToken(String token) {
+        return validateTokenType(token, ACCESS);
+    }
+
+    // Refresh Token 검증
+    public boolean validateRefreshToken(String token) {
+        return validateTokenType(token, REFRESH);
+    }
+
+    private boolean validateTokenType(
+            String token,
+            String expectedType
+    ) {
+        if (token == null || token.isBlank()) {
+            return false;
+        }
+
         try {
-            parser.parseSignedClaims(token);
-            return true;
+            Claims claims = parseClaims(token);
+
+            return expectedType.equals(
+                    claims.get(TOKEN_TYPE, String.class)
+            );
         } catch (JwtException | IllegalArgumentException e) {
-            // 개별 예외 분리 없음: 서명/형식/만료 등 모든 실패를 한 번에 처리
             log.debug("Invalid JWT: {}", e.toString());
             return false;
         }
     }
 
-
-
-    // 토큰 복호화
-    private Claims extractAllClaims(String token) {
-        return parser.parseSignedClaims(token).getPayload();
-    }
-
     public String extractEmail(String token) {
-        return extractAllClaims(token).get("email", String.class);
+        return parseClaims(token).get("email", String.class);
     }
 
     public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
+        return parseClaims(token).get("role", String.class);
+    }
+
+    public long getRefreshTokenExpirationMillis() {
+        return REFRESH_TOKEN_TIME;
     }
 }
