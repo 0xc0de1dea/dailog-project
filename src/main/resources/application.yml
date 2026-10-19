@@ -1,4 +1,14 @@
 spring:
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: qwen3:4b
+        think: false
+        temperature: 0.3
+        num-predict: 128
+        keep-alive: 10m
+
   data:
     redis:
       host: localhost

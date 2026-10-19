@@ -41,6 +41,12 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+    // Spring AI 버전 관리
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.1")
+
+    // Spring AI + Ollama 로컬 LLM
+    implementation 'org.springframework.ai:spring-ai-starter-model-ollama'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'

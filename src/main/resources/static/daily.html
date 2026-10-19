@@ -198,6 +198,62 @@
                     placeholder="오늘의 이야기를 적어주세요"></textarea>
         </label>
 
+        <!-- AI 글쓰기 도우미 -->
+        <section class="ai-writing">
+            <div class="ai-writing-header">
+                <div>
+                    <span class="ai-label">AI WRITING</span>
+                    <h3>AI 글쓰기 도우미</h3>
+                    <p>작성한 글을 더 자연스럽게 다듬어 보세요.</p>
+                </div>
+                <span class="ai-badge">AI</span>
+            </div>
+
+            <div class="ai-mode-buttons">
+                <button type="button" class="ai-mode-btn"
+                        data-ai-mode="CORRECT">
+                    문장 교정
+                </button>
+                <button type="button" class="ai-mode-btn"
+                        data-ai-mode="TITLE">
+                    제목 추천
+                </button>
+                <button type="button" class="ai-mode-btn"
+                        data-ai-mode="EMOTIONAL">
+                    감성 표현
+                </button>
+                <button type="button" class="ai-mode-btn"
+                        data-ai-mode="SUMMARIZE">
+                    요약하기
+                </button>
+            </div>
+
+            <div id="aiStatus" class="ai-status" role="status"
+                 aria-live="polite"></div>
+
+            <div id="aiResultBox" class="ai-result-box" hidden>
+                <div class="ai-result-header">
+                    <strong>AI 추천 결과</strong>
+                    <span id="aiResultMode"></span>
+                </div>
+
+                <textarea id="aiResultContent"
+                          class="ai-result-content"
+                          rows="5"
+                          readonly></textarea>
+
+                <div class="ai-result-actions">
+                    <button type="button" id="aiRetryBtn"
+                            class="ai-secondary-btn">
+                        다시 생성
+                    </button>
+                    <button type="button" id="aiApplyBtn"
+                            class="ai-primary-btn">
+                        작성창에 적용
+                    </button>
+                </div>
+            </div>
+        </section>
 
         <label>
             비밀번호
@@ -293,6 +349,7 @@
 <script src="js/common.js"></script>
 <script src="js/daily.js"></script>
 <script src="js/chat.js"></script>
+<script src="js/ai.js" defer></script>
 
 </body>
 </html>
