@@ -144,6 +144,8 @@ public class CommentService {
             throw new ServiceException(ErrorCode.INVALID_PASSWORD);
         }
 
+        commentLikeRepository.deleteAllByComment_Id(id);
+
         commentRepository.deleteById(id);
     }
 

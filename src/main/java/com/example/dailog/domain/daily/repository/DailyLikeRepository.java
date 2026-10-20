@@ -8,4 +8,6 @@ public interface DailyLikeRepository extends JpaRepository<DailyLike, Long> {
     boolean existsByDailyIdAndUserId(Long dailyId, Long userId);
 
     long countByDailyId(Long dailyId);
+
+    void deleteAllByDaily_Id(Long dailyId);
 }

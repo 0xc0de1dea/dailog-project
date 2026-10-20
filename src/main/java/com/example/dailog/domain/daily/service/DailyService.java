@@ -242,6 +242,8 @@ public class DailyService {
             throw new ServiceException(ErrorCode.INVALID_PASSWORD);
         }
 
+        dailyLikeRepository.deleteAllByDaily_Id(savedDaily.getId());
+
         dailyRepository.deleteById(id);
 
         dailyCacheService.deleteDailyCache(id);
