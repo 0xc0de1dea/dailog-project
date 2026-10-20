@@ -7,21 +7,17 @@
             name="viewport"
             content="width=device-width,initial-scale=1">
 
-    <title>Daily 상세</title>
+    <title>Dailog | 상세</title>
 
-    <link
-            rel="stylesheet"
-            href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
 <header class="topbar">
 
-    <a
-            class="brand"
-            href="daily.html">
-        Daily
+    <a class="brand" href="daily.html">
+        Dailog
     </a>
 
     <nav>
@@ -44,16 +40,13 @@
 
 </header>
 
-
 <main class="detail-layout">
 
     <!-- =========================
-         Daily + 댓글
+         Dailog 상세 + 댓글
     ========================== -->
 
     <section>
-
-        <!-- Daily 상세 -->
 
         <article
                 id="dailyDetail"
@@ -65,17 +58,13 @@
 
         </article>
 
-
         <!-- 댓글 -->
 
         <section class="panel">
 
             <div class="panel-head">
-
                 <h2>댓글</h2>
-
             </div>
-
 
             <form id="commentForm" class="comment-write">
 
@@ -100,15 +89,13 @@
 
                     <button
                             class="primary"
-                            type="submit"
-                    >
+                            type="submit">
                         등록
                     </button>
 
                 </div>
 
             </form>
-
 
             <div id="commentList"></div>
 
@@ -118,9 +105,8 @@
 
 </main>
 
-
 <!-- =========================
-     Daily 수정
+     Dailog 수정
 ========================== -->
 
 <dialog id="editDailyDialog">
@@ -129,7 +115,7 @@
 
         <div class="dialog-head">
 
-            <h2>Daily 수정</h2>
+            <h2>Dailog 수정</h2>
 
             <button
                     type="button"
@@ -139,7 +125,6 @@
             </button>
 
         </div>
-
 
         <label>
             제목
@@ -151,7 +136,6 @@
                     required>
         </label>
 
-
         <label>
             내용
 
@@ -160,7 +144,6 @@
                     rows="8"
                     required></textarea>
         </label>
-
 
         <label>
             비밀번호
@@ -172,7 +155,6 @@
                     required
                     placeholder="작성할 때 입력한 비밀번호">
         </label>
-
 
         <div class="dialog-actions">
 
@@ -196,11 +178,8 @@
 
 </dialog>
 
-
 <script src="js/common.js"></script>
-
 <script src="js/daily.js"></script>
-
 <script src="js/comment.js"></script>
 
 </body>

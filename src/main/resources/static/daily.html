@@ -7,7 +7,7 @@
             name="viewport"
             content="width=device-width,initial-scale=1">
 
-    <title>Daily | 홈</title>
+    <title>Dailog | 홈</title>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -17,7 +17,7 @@
 <header class="topbar">
 
     <a class="brand" href="daily.html">
-        Daily
+        Dailog
     </a>
 
     <nav>
@@ -32,12 +32,10 @@
 
 </header>
 
-
 <main class="layout">
 
-
     <!-- =========================
-         Daily
+         Dailog 목록
     ========================== -->
 
     <section class="panel">
@@ -45,7 +43,7 @@
         <div class="panel-head">
 
             <div>
-                <h2>Daily</h2>
+                <h2>Dailog</h2>
 
                 <p class="muted">
                     오늘의 이야기를 확인해보세요.
@@ -61,7 +59,6 @@
 
         </div>
 
-
         <!-- =========================
              Daily 검색
         ========================== -->
@@ -72,6 +69,7 @@
 
                 <label>
                     제목
+
                     <input
                             id="dailySearchTitle"
                             type="text"
@@ -81,6 +79,7 @@
 
                 <label>
                     내용
+
                     <input
                             id="dailySearchContent"
                             type="text"
@@ -116,7 +115,6 @@
 
     </section>
 
-
     <!-- =========================
          채팅방
     ========================== -->
@@ -150,7 +148,6 @@
 
 </main>
 
-
 <!-- =========================
      Daily 작성 Dialog
 ========================== -->
@@ -172,7 +169,6 @@
 
         </div>
 
-
         <label>
             제목
 
@@ -186,7 +182,6 @@
                     placeholder="제목을 입력해주세요">
         </label>
 
-
         <label>
             내용
 
@@ -199,60 +194,101 @@
         </label>
 
         <!-- AI 글쓰기 도우미 -->
+
         <section class="ai-writing">
+
             <div class="ai-writing-header">
+
                 <div>
                     <span class="ai-label">AI WRITING</span>
+
                     <h3>AI 글쓰기 도우미</h3>
-                    <p>작성한 글을 더 자연스럽게 다듬어 보세요.</p>
+
+                    <p>
+                        작성한 글을 더 자연스럽게 다듬어 보세요.
+                    </p>
                 </div>
+
                 <span class="ai-badge">AI</span>
+
             </div>
 
             <div class="ai-mode-buttons">
-                <button type="button" class="ai-mode-btn"
+
+                <button
+                        type="button"
+                        class="ai-mode-btn"
                         data-ai-mode="CORRECT">
                     문장 교정
                 </button>
-                <button type="button" class="ai-mode-btn"
+
+                <button
+                        type="button"
+                        class="ai-mode-btn"
                         data-ai-mode="TITLE">
                     제목 추천
                 </button>
-                <button type="button" class="ai-mode-btn"
+
+                <button
+                        type="button"
+                        class="ai-mode-btn"
                         data-ai-mode="EMOTIONAL">
                     감성 표현
                 </button>
-                <button type="button" class="ai-mode-btn"
+
+                <button
+                        type="button"
+                        class="ai-mode-btn"
                         data-ai-mode="SUMMARIZE">
                     요약하기
                 </button>
+
             </div>
 
-            <div id="aiStatus" class="ai-status" role="status"
-                 aria-live="polite"></div>
+            <div
+                    id="aiStatus"
+                    class="ai-status"
+                    role="status"
+                    aria-live="polite">
+            </div>
 
-            <div id="aiResultBox" class="ai-result-box" hidden>
+            <div
+                    id="aiResultBox"
+                    class="ai-result-box"
+                    hidden>
+
                 <div class="ai-result-header">
                     <strong>AI 추천 결과</strong>
                     <span id="aiResultMode"></span>
                 </div>
 
-                <textarea id="aiResultContent"
-                          class="ai-result-content"
-                          rows="5"
-                          readonly></textarea>
+                <textarea
+                        id="aiResultContent"
+                        class="ai-result-content"
+                        rows="5"
+                        readonly>
+                </textarea>
 
                 <div class="ai-result-actions">
-                    <button type="button" id="aiRetryBtn"
+
+                    <button
+                            type="button"
+                            id="aiRetryBtn"
                             class="ai-secondary-btn">
                         다시 생성
                     </button>
-                    <button type="button" id="aiApplyBtn"
+
+                    <button
+                            type="button"
+                            id="aiApplyBtn"
                             class="ai-primary-btn">
                         작성창에 적용
                     </button>
+
                 </div>
+
             </div>
+
         </section>
 
         <label>
@@ -268,7 +304,6 @@
                     autocomplete="new-password"
                     placeholder="삭제할 때 사용할 비밀번호">
         </label>
-
 
         <div class="dialog-actions">
 
@@ -291,7 +326,6 @@
     </form>
 
 </dialog>
-
 
 <!-- =========================
      채팅방 생성 Dialog
@@ -344,7 +378,6 @@
     </form>
 
 </dialog>
-
 
 <script src="js/common.js"></script>
 <script src="js/daily.js"></script>
