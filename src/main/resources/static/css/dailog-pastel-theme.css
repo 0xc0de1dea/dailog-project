@@ -1,0 +1,353 @@
+/* =========================================================
+   Dailog / Daily pastel theme
+   Include AFTER css/style.css on login, signup, daily and chat pages.
+   Background image path: ../images/daily-background.png
+   ========================================================= */
+
+:root {
+    --pastel-rose: #df8995;
+    --pastel-rose-dark: #bd6878;
+    --pastel-rose-light: #fbe3e4;
+    --pastel-mint: #9caf8d;
+    --pastel-mint-light: #edf2e7;
+    --pastel-lavender: #e9e2f2;
+    --pastel-cream: #fffaf5;
+    --pastel-ink: #51484a;
+    --pastel-muted: #8c8080;
+    --pastel-border: rgba(174, 143, 132, .22);
+    --pastel-shadow: 0 12px 32px rgba(123, 88, 78, .12);
+}
+
+html {
+    min-height: 100%;
+    background: #f9e9e1;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--pastel-ink);
+    background-color: #f8e8df;
+    background-image:
+        linear-gradient(rgba(255, 248, 243, .34), rgba(255, 248, 243, .34)),
+        url("../images/daily-background.png");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Login / signup */
+.auth-page {
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    padding: 32px 18px;
+}
+
+.auth-card {
+    background: rgba(255, 251, 247, .91) !important;
+    border: 1px solid rgba(255, 255, 255, .78) !important;
+    border-radius: 28px !important;
+    box-shadow: 0 20px 55px rgba(123, 88, 78, .18) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--pastel-ink);
+}
+
+.auth-card h1,
+.auth-card h2 {
+    color: #b96f7c;
+    letter-spacing: -.035em;
+}
+
+.auth-card label {
+    color: #76696a;
+    font-weight: 600;
+}
+
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
+    background: rgba(255, 255, 255, .82);
+    border: 1px solid #eadbd5;
+    border-radius: 14px;
+    color: var(--pastel-ink);
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.auth-card input:focus,
+.auth-card select:focus,
+.auth-card textarea:focus {
+    outline: none;
+    border-color: #d99aa3;
+    box-shadow: 0 0 0 4px rgba(223, 137, 149, .15);
+}
+
+/* Shared navigation/header */
+.topbar,
+header.topbar,
+.app-header,
+.navbar {
+    background: rgba(255, 250, 246, .88) !important;
+    border-color: var(--pastel-border) !important;
+    box-shadow: 0 5px 22px rgba(123, 88, 78, .08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.brand,
+.logo,
+.topbar .brand {
+    color: var(--pastel-rose-dark);
+}
+
+/* Daily list, search area, post cards, comment panels and chat panels */
+.daily-card,
+.daily-item,
+.daily-list-item,
+.daily-panel,
+.comment-card,
+.comments-section,
+.chat-panel,
+.chat-sidebar,
+.chat-room-list,
+.chat-room-item,
+.chat-container,
+.chat-layout,
+.chat-main,
+.chat-room-card,
+.panel,
+.content-card,
+.section-card,
+.modal-content,
+.dialog,
+.auth-card {
+    background-color: rgba(255, 251, 247, .88);
+    border-color: var(--pastel-border);
+    box-shadow: var(--pastel-shadow);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+}
+
+/* Give the main content a little breathing room over the illustration */
+main,
+.page-content,
+.daily-page,
+.chat-page {
+    color: var(--pastel-ink);
+}
+
+/* Search bars and text fields */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    accent-color: var(--pastel-rose);
+}
+
+/* Buttons: pastel pink primary, mint secondary */
+button,
+.button,
+.primary,
+button.primary {
+    transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+
+.primary,
+button.primary,
+#newDailyBtn,
+#saveDailyBtn,
+#signupForm button[type="submit"],
+#loginForm button[type="submit"] {
+    background: linear-gradient(135deg, #e8a0a7, #d98191) !important;
+    border: 1px solid rgba(190, 104, 120, .18) !important;
+    color: #fff !important;
+    box-shadow: 0 7px 16px rgba(201, 119, 132, .18);
+}
+
+button:hover,
+.button:hover,
+.primary:hover {
+    filter: brightness(1.025);
+    transform: translateY(-1px);
+}
+
+#newRoomBtn,
+#newChatRoomBtn,
+.chat-new-room-button,
+button.secondary,
+.secondary {
+    background: linear-gradient(135deg, #b5c6a5, #91a982);
+    color: #fff;
+    border-color: rgba(112, 143, 97, .2);
+}
+
+/* Keep the room-creation button label on one line */
+.chat-new-room-button,
+#newRoomBtn,
+#newChatRoomBtn,
+.chat-create-room-btn,
+button[aria-label*="방 만들기"] {
+    white-space: nowrap;
+    word-break: keep-all;
+    flex-shrink: 0;
+    min-width: max-content;
+}
+
+/* Small chips, counters and tags */
+.badge,
+.count-badge,
+.unread-badge,
+.tag {
+    border-radius: 999px;
+}
+
+.unread-badge,
+.count-badge {
+    background: #df8995;
+    color: #fff;
+}
+
+/* Modals remain readable while the room illustration shows around them */
+.modal,
+.dialog-backdrop,
+.overlay {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-content,
+.dialog {
+    border: 1px solid rgba(255, 255, 255, .82);
+    border-radius: 24px;
+}
+
+/* Chat messages */
+.chat-message,
+.message-bubble,
+.chat-bubble {
+    border-radius: 18px;
+}
+
+.chat-message:not(.mine),
+.message-bubble:not(.mine),
+.chat-bubble:not(.mine) {
+    background: rgba(255, 255, 255, .88);
+}
+
+.chat-message.mine,
+.message-bubble.mine,
+.chat-bubble.mine {
+    background: #f6dfe2;
+}
+
+/* Mobile: avoid fixed backgrounds behaving awkwardly on some browsers */
+@media (max-width: 700px) {
+    body {
+        background-attachment: scroll;
+        background-position: center top;
+    }
+
+    .auth-card {
+        border-radius: 22px !important;
+        padding: clamp(22px, 6vw, 34px);
+    }
+
+    .chat-new-room-button,
+    #newRoomBtn,
+    #newChatRoomBtn,
+    .chat-create-room-btn {
+        white-space: nowrap;
+        min-width: max-content;
+    }
+}
+
+/* =========================================================
+   Chat page: explicit overrides for chat.html's real classes
+   ========================================================= */
+html:has(body.chat-page) {
+    min-height: 100%;
+    background: #f8e8df;
+}
+
+body.chat-page {
+    min-height: 100vh;
+    background-color: #f8e8df !important;
+    background-image:
+        linear-gradient(rgba(255, 247, 241, .22), rgba(255, 247, 241, .22)),
+        url("../images/daily-background.png") !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+body.chat-page .chat-topbar,
+body.chat-page .chat-sidebar,
+body.chat-page .chat-main,
+body.chat-page .chat-workspace,
+body.chat-page .chat-header,
+body.chat-page .chat-empty,
+body.chat-page .chat-input-area,
+body.chat-page .chat-room-list {
+    background-color: rgba(255, 250, 246, .78) !important;
+    border-color: rgba(174, 143, 132, .24) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+body.chat-page .chat-layout {
+    background: transparent !important;
+}
+
+body.chat-page .chat-sidebar,
+body.chat-page .chat-main {
+    border: 1px solid rgba(255, 255, 255, .78);
+    border-radius: 24px;
+    box-shadow: 0 14px 38px rgba(123, 88, 78, .13);
+    overflow: hidden;
+}
+
+body.chat-page .chat-messages {
+    background: rgba(255, 249, 245, .52) !important;
+    border-color: rgba(174, 143, 132, .18) !important;
+}
+
+body.chat-page .chat-input-wrapper input,
+body.chat-page #chatInput {
+    background: rgba(255, 255, 255, .9) !important;
+    border: 1px solid #eadbd5 !important;
+    border-radius: 16px;
+}
+
+body.chat-page .chat-brand,
+body.chat-page .chat-room-title,
+body.chat-page .chat-sidebar-title {
+    color: #bd6878;
+}
+
+body.chat-page .chat-send-button,
+body.chat-page .chat-empty-button {
+    background: linear-gradient(135deg, #e8a0a7, #d98191) !important;
+    color: #fff !important;
+    border: 0;
+    border-radius: 14px;
+}
+
+body.chat-page .chat-new-room-button {
+    background: linear-gradient(135deg, #b5c6a5, #91a982) !important;
+    color: #fff !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+    body.chat-page {
+        background-attachment: scroll !important;
+        background-position: center top !important;
+    }
+
+    body.chat-page .chat-sidebar,
+    body.chat-page .chat-main {
+        border-radius: 18px;
+    }
+}
