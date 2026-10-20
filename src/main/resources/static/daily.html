@@ -3,73 +3,46 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta
-            name="viewport"
-            content="width=device-width,initial-scale=1">
-
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Dailog | 홈</title>
-
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
 <header class="topbar">
-
-    <a class="brand" href="daily.html">
-        Dailog
-    </a>
+    <a class="brand" href="daily.html">Dailog</a>
 
     <nav>
         <span id="userName"></span>
-
-        <button
-                id="logoutBtn"
-                class="ghost">
-            로그아웃
-        </button>
+        <button id="logoutBtn" class="ghost">로그아웃</button>
     </nav>
-
 </header>
 
 <main class="layout">
 
-    <!-- =========================
-         Dailog 목록
-    ========================== -->
+    <!-- Dailog 목록 -->
 
     <section class="panel">
 
         <div class="panel-head">
-
             <div>
                 <h2>Dailog</h2>
-
-                <p class="muted">
-                    오늘의 이야기를 확인해보세요.
-                </p>
+                <p class="muted">오늘의 이야기를 확인해보세요.</p>
             </div>
 
-            <button
-                    id="newDailyBtn"
-                    type="button"
-                    class="primary">
+            <button id="newDailyBtn" type="button" class="primary">
                 + Daily 작성
             </button>
-
         </div>
 
-        <!-- =========================
-             Daily 검색
-        ========================== -->
+        <!-- Daily 검색 -->
 
         <form id="dailySearchForm" class="daily-search">
-
             <div class="search-fields">
 
                 <label>
                     제목
-
                     <input
                             id="dailySearchTitle"
                             type="text"
@@ -79,7 +52,6 @@
 
                 <label>
                     내용
-
                     <input
                             id="dailySearchContent"
                             type="text"
@@ -90,56 +62,30 @@
             </div>
 
             <div class="search-actions">
-
-                <button
-                        type="submit"
-                        class="primary">
-                    🔍 검색
-                </button>
-
-                <button
-                        type="button"
-                        id="resetDailySearch"
-                        class="secondary">
+                <button type="submit" class="primary">🔍 검색</button>
+                <button type="button" id="resetDailySearch" class="secondary">
                     초기화
                 </button>
-
             </div>
-
         </form>
 
-        <div
-                id="dailyList"
-                class="daily-list">
-        </div>
+        <div id="dailyList" class="daily-list"></div>
 
     </section>
 
-    <!-- =========================
-         채팅방
-    ========================== -->
+    <!-- 채팅방 -->
 
     <aside class="panel chat-rooms">
 
         <div class="panel-head">
-
             <div>
-
                 <h2>채팅방</h2>
-
-                <p class="muted">
-                    사람들과 이야기를 나눠보세요.
-                </p>
-
+                <p class="muted">사람들과 이야기를 나눠보세요.</p>
             </div>
 
-            <button
-                    id="newRoomBtn"
-                    type="button"
-                    class="secondary">
+            <button id="newRoomBtn" type="button" class="secondary">
                 + 방 만들기
             </button>
-
         </div>
 
         <div id="roomList"></div>
@@ -148,16 +94,13 @@
 
 </main>
 
-<!-- =========================
-     Daily 작성 Dialog
-========================== -->
+<!-- Daily 작성 Dialog -->
 
 <dialog id="dailyDialog">
 
     <form id="dailyForm">
 
         <div class="dialog-head">
-
             <h2>Daily 작성</h2>
 
             <button
@@ -166,10 +109,9 @@
                     class="icon">
                 ×
             </button>
-
         </div>
 
-        <label>
+        <label for="dailyTitle">
             제목
 
             <input
@@ -177,20 +119,27 @@
                     name="title"
                     type="text"
                     required
-                    maxlength="100"
+                    maxlength="50"
                     autocomplete="off"
                     placeholder="제목을 입력해주세요">
+
+            <small class="char-counter" id="dailyTitleCounter"
+                   aria-live="polite">0 / 50자</small>
         </label>
 
-        <label>
+        <label for="dailyContent">
             내용
 
             <textarea
                     id="dailyContent"
                     name="content"
                     required
+                    maxlength="1000"
                     rows="8"
                     placeholder="오늘의 이야기를 적어주세요"></textarea>
+
+            <small class="char-counter" id="dailyContentCounter"
+                   aria-live="polite">0 / 1,000자</small>
         </label>
 
         <!-- AI 글쓰기 도우미 -->
@@ -198,100 +147,67 @@
         <section class="ai-writing">
 
             <div class="ai-writing-header">
-
                 <div>
                     <span class="ai-label">AI WRITING</span>
-
                     <h3>AI 글쓰기 도우미</h3>
-
-                    <p>
-                        작성한 글을 더 자연스럽게 다듬어 보세요.
-                    </p>
+                    <p>작성한 글을 더 자연스럽게 다듬어 보세요.</p>
                 </div>
 
                 <span class="ai-badge">AI</span>
-
             </div>
 
             <div class="ai-mode-buttons">
-
-                <button
-                        type="button"
-                        class="ai-mode-btn"
+                <button type="button" class="ai-mode-btn"
                         data-ai-mode="CORRECT">
                     문장 교정
                 </button>
 
-                <button
-                        type="button"
-                        class="ai-mode-btn"
+                <button type="button" class="ai-mode-btn"
                         data-ai-mode="TITLE">
                     제목 추천
                 </button>
 
-                <button
-                        type="button"
-                        class="ai-mode-btn"
+                <button type="button" class="ai-mode-btn"
                         data-ai-mode="EMOTIONAL">
                     감성 표현
                 </button>
 
-                <button
-                        type="button"
-                        class="ai-mode-btn"
+                <button type="button" class="ai-mode-btn"
                         data-ai-mode="SUMMARIZE">
                     요약하기
                 </button>
-
             </div>
 
-            <div
-                    id="aiStatus"
-                    class="ai-status"
-                    role="status"
-                    aria-live="polite">
-            </div>
+            <div id="aiStatus" class="ai-status"
+                 role="status" aria-live="polite"></div>
 
-            <div
-                    id="aiResultBox"
-                    class="ai-result-box"
-                    hidden>
-
+            <div id="aiResultBox" class="ai-result-box" hidden>
                 <div class="ai-result-header">
                     <strong>AI 추천 결과</strong>
                     <span id="aiResultMode"></span>
                 </div>
 
-                <textarea
-                        id="aiResultContent"
-                        class="ai-result-content"
-                        rows="5"
-                        readonly>
-                </textarea>
+                <textarea id="aiResultContent"
+                          class="ai-result-content"
+                          rows="5"
+                          readonly></textarea>
 
                 <div class="ai-result-actions">
-
-                    <button
-                            type="button"
-                            id="aiRetryBtn"
+                    <button type="button" id="aiRetryBtn"
                             class="ai-secondary-btn">
                         다시 생성
                     </button>
 
-                    <button
-                            type="button"
-                            id="aiApplyBtn"
+                    <button type="button" id="aiApplyBtn"
                             class="ai-primary-btn">
                         작성창에 적용
                     </button>
-
                 </div>
-
             </div>
 
         </section>
 
-        <label>
+        <label for="dailyPassword">
             비밀번호
 
             <input
@@ -306,73 +222,42 @@
         </label>
 
         <div class="dialog-actions">
-
-            <button
-                    type="button"
-                    id="cancelDailyBtn"
-                    class="secondary">
+            <button type="button" id="cancelDailyBtn" class="secondary">
                 취소
             </button>
 
-            <button
-                    type="submit"
-                    id="saveDailyBtn"
-                    class="primary">
+            <button type="submit" id="saveDailyBtn" class="primary">
                 작성
             </button>
-
         </div>
 
     </form>
 
 </dialog>
 
-<!-- =========================
-     채팅방 생성 Dialog
-========================== -->
+<!-- 채팅방 생성 Dialog -->
 
 <dialog id="roomDialog">
 
-    <form
-            method="dialog"
-            id="roomForm">
+    <form method="dialog" id="roomForm">
 
         <div class="dialog-head">
-
             <h2>채팅방 만들기</h2>
 
-            <button
-                    type="button"
-                    class="icon">
-                ×
-            </button>
-
+            <button type="button" class="icon">×</button>
         </div>
 
-        <label>
+        <label for="roomName">
             방 이름
-
-            <input
-                    id="roomName"
-                    required
-                    maxlength="50">
+            <input id="roomName" required maxlength="50">
         </label>
 
         <div class="dialog-actions">
+            <button value="cancel" class="secondary">취소</button>
 
-            <button
-                    value="cancel"
-                    class="secondary">
-                취소
-            </button>
-
-            <button
-                    id="saveRoomBtn"
-                    value="default"
-                    class="primary">
+            <button id="saveRoomBtn" value="default" class="primary">
                 만들기
             </button>
-
         </div>
 
     </form>
@@ -383,6 +268,37 @@
 <script src="js/daily.js"></script>
 <script src="js/chat.js"></script>
 <script src="js/ai.js" defer></script>
+
+<!-- 실시간 글자 수 표시 -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const counters = [
+            {
+                input: document.getElementById("dailyTitle"),
+                counter: document.getElementById("dailyTitleCounter"),
+                max: 50
+            },
+            {
+                input: document.getElementById("dailyContent"),
+                counter: document.getElementById("dailyContentCounter"),
+                max: 1000
+            }
+        ];
+
+        counters.forEach(({ input, counter, max }) => {
+            if (!input || !counter) return;
+
+            const updateCounter = () => {
+                counter.textContent =
+                    `${input.value.length.toLocaleString("ko-KR")} / ${max.toLocaleString("ko-KR")}자`;
+            };
+
+            input.addEventListener("input", updateCounter);
+            updateCounter();
+        });
+    });
+</script>
 
 </body>
 </html>

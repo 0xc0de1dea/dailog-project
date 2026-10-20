@@ -4,11 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record DailyImproveRequest(
-        @Size(max = 200)
+        @Size(max = 50)
         String title,
 
         @NotBlank
-        @Size(max = 5000)
+        @Size(max = 1000)
         String content,
 
         @NotBlank

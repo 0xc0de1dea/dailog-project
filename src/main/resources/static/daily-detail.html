@@ -3,12 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta
-            name="viewport"
-            content="width=device-width,initial-scale=1">
-
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Dailog | 상세</title>
-
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -16,46 +12,26 @@
 
 <header class="topbar">
 
-    <a class="brand" href="daily.html">
-        Dailog
-    </a>
+    <a class="brand" href="daily.html">Dailog</a>
 
     <nav>
-
         <span id="userName"></span>
 
-        <a
-                href="daily.html"
-                class="nav-link">
-            목록
-        </a>
+        <a href="daily.html" class="nav-link">목록</a>
 
-        <button
-                id="logoutBtn"
-                class="ghost">
-            로그아웃
-        </button>
-
+        <button id="logoutBtn" class="ghost">로그아웃</button>
     </nav>
 
 </header>
 
 <main class="detail-layout">
 
-    <!-- =========================
-         Dailog 상세 + 댓글
-    ========================== -->
+    <!-- Daily 상세 + 댓글 -->
 
     <section>
 
-        <article
-                id="dailyDetail"
-                class="panel detail-card">
-
-            <div class="loading">
-                불러오는 중...
-            </div>
-
+        <article id="dailyDetail" class="panel detail-card">
+            <div class="loading">불러오는 중...</div>
         </article>
 
         <!-- 댓글 -->
@@ -73,8 +49,7 @@
                         rows="5"
                         maxlength="100"
                         placeholder="댓글을 남겨보세요."
-                        required
-                ></textarea>
+                        required></textarea>
 
                 <div class="comment-write-bottom">
 
@@ -84,12 +59,9 @@
                             maxlength="100"
                             placeholder="비밀번호"
                             autocomplete="new-password"
-                            required
-                    >
+                            required>
 
-                    <button
-                            class="primary"
-                            type="submit">
+                    <button class="primary" type="submit">
                         등록
                     </button>
 
@@ -105,17 +77,14 @@
 
 </main>
 
-<!-- =========================
-     Dailog 수정
-========================== -->
+<!-- Daily 수정 Dialog -->
 
 <dialog id="editDailyDialog">
 
     <form id="editDailyForm">
 
         <div class="dialog-head">
-
-            <h2>Dailog 수정</h2>
+            <h2>Daily 수정</h2>
 
             <button
                     type="button"
@@ -123,29 +92,35 @@
                     class="icon">
                 ×
             </button>
-
         </div>
 
-        <label>
+        <label for="editDailyTitle">
             제목
 
             <input
                     id="editDailyTitle"
                     type="text"
-                    maxlength="100"
+                    maxlength="50"
                     required>
+
+            <small class="char-counter" id="editDailyTitleCounter"
+                   aria-live="polite">0 / 50자</small>
         </label>
 
-        <label>
+        <label for="editDailyContent">
             내용
 
             <textarea
                     id="editDailyContent"
                     rows="8"
+                    maxlength="1000"
                     required></textarea>
+
+            <small class="char-counter" id="editDailyContentCounter"
+                   aria-live="polite">0 / 1,000자</small>
         </label>
 
-        <label>
+        <label for="editDailyPassword">
             비밀번호
 
             <input
@@ -181,6 +156,37 @@
 <script src="js/common.js"></script>
 <script src="js/daily.js"></script>
 <script src="js/comment.js"></script>
+
+<!-- 실시간 글자 수 표시 -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const counters = [
+            {
+                input: document.getElementById("editDailyTitle"),
+                counter: document.getElementById("editDailyTitleCounter"),
+                max: 50
+            },
+            {
+                input: document.getElementById("editDailyContent"),
+                counter: document.getElementById("editDailyContentCounter"),
+                max: 1000
+            }
+        ];
+
+        counters.forEach(({ input, counter, max }) => {
+            if (!input || !counter) return;
+
+            const updateCounter = () => {
+                counter.textContent =
+                    `${input.value.length.toLocaleString("ko-KR")} / ${max.toLocaleString("ko-KR")}자`;
+            };
+
+            input.addEventListener("input", updateCounter);
+            updateCounter();
+        });
+    });
+</script>
 
 </body>
 </html>

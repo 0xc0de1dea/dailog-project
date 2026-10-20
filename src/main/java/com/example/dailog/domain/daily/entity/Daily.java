@@ -31,13 +31,13 @@ public class Daily extends BaseEntity {
     private Long id;
 
     @NotBlank(message = "일정 제목은 필수입니다.")
-    @Size(max = 200, message = "일정 제목은 최대 200자까지 입력할 수 있습니다.")
-    @Column(nullable = false, length = 200)
+    @Size(max = 50, message = "일정 제목은 최대 50자까지 입력할 수 있습니다.")
+    @Column(nullable = false, length = 50)
     private String title;
 
     @NotBlank(message = "일정 내용은 필수입니다.")
-    @Size(max = 5000, message = "일정 내용은 최대 5000자까지 입력할 수 있습니다.")
-    @Column(nullable = false, length = 5000)
+    @Size(max = 1000, message = "일정 내용은 최대 1000자까지 입력할 수 있습니다.")
+    @Column(nullable = false, length = 1000)
     private String content;
 
     @NotBlank(message = "작성자명은 필수입니다.")

@@ -2122,3 +2122,17 @@ dialog form {
         flex: 1;
     }
 }
+
+/* 제목 및 내용 글자 수 표시 */
+.char-counter {
+    display: block;
+    margin-top: 6px;
+    color: #777;
+    font-size: 12px;
+    text-align: right;
+    line-height: 1.5;
+}
+
+.char-counter:empty {
+    display: none;
+}
