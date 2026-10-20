@@ -1,13 +1,13 @@
 spring:
   ai:
     ollama:
-      base-url: http://localhost:11434
+      base-url: http://host.docker.internal:11434
       chat:
         model: qwen3:4b
         think: false
-        temperature: 0.3
-        num-predict: 128
-        keep-alive: 10m
+        options:
+          temperature: 0.3
+          num-predict: 128
 
   data:
     redis:

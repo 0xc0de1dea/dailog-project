@@ -1,3 +1,4 @@
+
 (() => {
     "use strict";
 
@@ -12,12 +13,10 @@
 
     const titleInput = document.getElementById("dailyTitle");
     const contentInput = document.getElementById("dailyContent");
-
     const statusEl = document.getElementById("aiStatus");
     const resultBox = document.getElementById("aiResultBox");
     const resultModeEl = document.getElementById("aiResultMode");
     const resultContentEl = document.getElementById("aiResultContent");
-
     const applyBtn = document.getElementById("aiApplyBtn");
     const retryBtn = document.getElementById("aiRetryBtn");
     const modeButtons = document.querySelectorAll("[data-ai-mode]");
@@ -27,13 +26,12 @@
         !contentInput ||
         !statusEl ||
         !resultBox ||
+        !resultModeEl ||
         !resultContentEl ||
         !applyBtn ||
         !retryBtn
     ) {
-        console.warn(
-            "[AI] Daily 작성 폼 또는 AI 요소를 찾을 수 없습니다."
-        );
+        console.warn("[AI] Daily 작성 폼 또는 AI 요소를 찾을 수 없습니다.");
         return;
     }
 
@@ -53,7 +51,7 @@
     function setLoading(loading) {
         isLoading = loading;
 
-        modeButtons.forEach((button) => {
+        modeButtons.forEach(button => {
             button.disabled = loading;
         });
 
@@ -62,31 +60,64 @@
     }
 
     function unwrapResponse(body) {
-        // ApiResponse 형태: { success, data: {...} }
-        if (body && body.data !== undefined) {
-            return body.data;
+        return body?.data !== undefined ? body.data : body;
+    }
+
+    // XML 형태의 태그가 포함된 모델 응답도 처리한다.
+    function parseAiResult(rawContent, mode) {
+        const raw = String(rawContent ?? "").trim();
+
+        if (!raw) {
+            return "";
         }
 
-        return body;
+        const titleMatch = raw.match(
+            /<daily_title\b[^>]*>([\s\S]*?)<\/daily_title>/i
+        );
+
+        const contentMatch = raw.match(
+            /<daily_content\b[^>]*>([\s\S]*?)<\/daily_content>/i
+        );
+
+        const extractText = value => {
+            return String(value ?? "")
+                .replace(/<\/?daily_title\b[^>]*>/gi, "")
+                .replace(/<\/?daily_content\b[^>]*>/gi, "")
+                .trim();
+        };
+
+        // 제목 추천은 제목 태그 안의 내용만 사용한다.
+        if (mode === "TITLE" && titleMatch) {
+            return extractText(titleMatch[1]);
+        }
+
+        // 본문 관련 작업은 본문 태그 안의 내용만 사용한다.
+        if (mode !== "TITLE" && contentMatch) {
+            return extractText(contentMatch[1]);
+        }
+
+        // 태그가 없는 일반 응답 또는 일부 태그만 있는 응답도 처리한다.
+        return extractText(raw);
     }
 
     async function improveDaily(mode) {
         if (isLoading) return;
 
+        if (!MODE_LABELS[mode]) {
+            setStatus("지원하지 않는 AI 작업입니다.", "error");
+            return;
+        }
+
         const title = titleInput.value.trim();
         const content = contentInput.value.trim();
 
         if (!content) {
-            setStatus(
-                "먼저 Daily 본문을 작성해 주세요.",
-                "error"
-            );
+            setStatus("먼저 Daily 본문을 작성해 주세요.", "error");
             contentInput.focus();
             return;
         }
 
         const storedToken = localStorage.getItem("dailyJwt");
-
         const token = storedToken
             ? storedToken.replace(/^Bearer\s+/i, "").trim()
             : null;
@@ -100,7 +131,9 @@
         }
 
         currentMode = mode;
+        currentResult = "";
         resultBox.hidden = true;
+
         setStatus(
             `${MODE_LABELS[mode]} 작업 중입니다. 모델 응답까지 잠시 기다려 주세요.`
         );
@@ -133,33 +166,35 @@
             }
 
             if (!response.ok) {
-                const message =
+                throw new Error(
                     rawBody?.message ||
                     rawBody?.error ||
-                    `AI 요청에 실패했습니다. (HTTP ${response.status})`;
-
-                throw new Error(message);
+                    `AI 요청에 실패했습니다. (HTTP ${response.status})`
+                );
             }
 
             const data = unwrapResponse(rawBody);
 
-            if (!data || typeof data.content !== "string") {
+            if (typeof data?.content !== "string") {
                 throw new Error(
                     "AI 응답 형식이 예상과 다릅니다. 백엔드 응답을 확인해 주세요."
                 );
             }
 
-            currentResult = data.content.trim();
+            currentResult = parseAiResult(data.content, mode);
 
             if (!currentResult) {
-                throw new Error("AI가 빈 결과를 반환했습니다.");
+                throw new Error("AI가 비어 있는 결과를 반환했습니다.");
             }
 
             resultModeEl.textContent = MODE_LABELS[mode];
             resultContentEl.value = currentResult;
             resultBox.hidden = false;
 
-            setStatus("AI 결과가 생성되었습니다. 확인 후 적용해 주세요.", "success");
+            setStatus(
+                "AI 결과가 생성되었습니다. 확인 후 적용해 주세요.",
+                "success"
+            );
         } catch (error) {
             if (error.name === "AbortError") {
                 setStatus(
@@ -167,7 +202,10 @@
                     "error"
                 );
             } else {
-                setStatus(error.message || "AI 요청 중 오류가 발생했습니다.", "error");
+                setStatus(
+                    error.message || "AI 요청 중 오류가 발생했습니다.",
+                    "error"
+                );
             }
         } finally {
             clearTimeout(timeoutId);
@@ -175,7 +213,7 @@
         }
     }
 
-    modeButtons.forEach((button) => {
+    modeButtons.forEach(button => {
         button.addEventListener("click", () => {
             improveDaily(button.dataset.aiMode);
         });
@@ -196,17 +234,11 @@
         }
 
         if (currentMode === "TITLE") {
-            // 제목 추천 모드에서는 모델의 결과를 제목에 적용
             titleInput.value = result;
-            titleInput.dispatchEvent(
-                new Event("input", { bubbles: true })
-            );
+            titleInput.dispatchEvent(new Event("input", { bubbles: true }));
         } else {
-            // 나머지 모드에서는 모델의 결과를 본문에 적용
             contentInput.value = result;
-            contentInput.dispatchEvent(
-                new Event("input", { bubbles: true })
-            );
+            contentInput.dispatchEvent(new Event("input", { bubbles: true }));
         }
 
         resultBox.hidden = true;
