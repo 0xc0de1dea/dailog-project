@@ -147,8 +147,6 @@ public class AiWritingService {
                             + "ms"
             );
 
-            e.printStackTrace();
-
             throw e;
         }
 
