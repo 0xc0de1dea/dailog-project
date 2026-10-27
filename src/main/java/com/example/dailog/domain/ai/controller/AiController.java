@@ -21,7 +21,6 @@ public class AiController {
     public ResponseEntity<ApiResponse<DailyImproveResponse>> improve(
             @Valid @RequestBody DailyImproveRequest request
     ) {
-        System.out.println(">>> AiController 요청 도착");
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.ok(aiWritingService.improve(request)));
